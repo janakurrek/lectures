@@ -1,0 +1,33 @@
+\begin{thm}
+  Definition 2 of a Poisson Process implies Definition 1b.
+\end{thm}
+
+\begin{proof}
+  Let $X_1, X_2, \cdots$ be an i.i.d sequence of exponential random variables with parameter $\lambda$. For each $n$, let $S_n = X_1 + \cdots + X_n$, with $S_0 = 0$, and let $N_t = \max \{n \mid S_n \leq t\}$. We need to show that $N_t \sim \text{Po}(\lambda \cdot t)$. For $k \geq 0$, $N_t = k$ if and only if the $k$th arrival occurs by time $t$ and the $(k+1)$th arrival occurs after $t$. That is, $S_k \leq t < S_{k+1}$ or, $S_k \leq t < S_k + X_{k+1}$. $S_k$ and $X_{k+1}$ are independent random variables because $S_k$ is a function of $X_1, \cdots, X_k$.
+
+  The joint density of $S_k$ and $X_{k+1}$ is the product of their marginal densities by independence. Recall,
+  \begin{align*}
+    &f_{S_{k}}(s) = \frac{\lambda^{k} x^{k-1}}{(k-1) !} \cdot e^{-\lambda x}  \quad \text{ because } \quad S_{k} \sim \text{Gamma}(\lambda, k) \\
+    &f_{X_{k+1}}(x) = \lambda e^{-\lambda t} \quad \text{ because } \quad X_{k+1} \sim \text{Exp}(\lambda)
+  \end{align*}
+  This gives,
+  \[f_{S_{k}, X_{k+1}}(s, x)=f_{S_{k}}(s) \cdot f_{X_{k+1}}(x)=\left(\frac{\lambda^{k} s^{k-1} e^{-\lambda s}}{(k-1) !}\right) \lambda e^{-\lambda x}, \text { for } s, x>0\]
+  \noindent For $k \geq 0$, 
+  \begin{align*}
+    P(N_t = k) &= P(S_k \leq t \leq S_k + X_{k+1}) \\
+               &= P(\{S_k \leq t\} \cap \{X_{k+1} \geq t - S_k\}) \\
+               &= \int_{0}^{t} \int_{t-s}^{\infty} f_{S_{k}, X_{k+1}}(s, x) d x d s \\
+               &=\frac{e^{-\lambda t} \lambda^{k}}{(k-1) !} \int_{0}^{t} s^{k-1} d s \\
+               &=\frac{e^{-\lambda t}(\lambda t)^{k}}{k !}
+  \end{align*}
+  We need to show that for $t > s > 0$, $N_t - N_s \sim \text{Po}(\lambda \cdot (t - s))$, conditionally on $(N_r)_{r \in [0,s]}$
+\end{proof}
+
+\begin{lem}
+  To construct a Poisson process,
+  \begin{enumerate}
+      \item Generate i.i.d. exponential random variables $(X_n)_{n \geq 1}$
+      \item Let $S_0 = 0$ and $S_{n}=\sum_{j=1}^n X_n$ for $n \geq 1$
+      \item Let $N_{t}=k$ for $k \in \mathbb{N_0}$ and $t \in (S_k, S_{k+1}]$
+  \end{enumerate}
+\end{lem}

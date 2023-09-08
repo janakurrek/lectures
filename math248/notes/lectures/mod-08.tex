@@ -1,0 +1,248 @@
+\section{Integrals over Paths and Surfaces}
+\subsection{Summary}
+In this section, we will see the following variations of integrals:
+\[
+\begin{array}{l|l}
+\textbf {Path Integral} & \int_{\mathbf{c}} f d s=\int_a^b f(\mathbf{c}(t)) \cdot\left\|\mathbf{c}^{\prime}(t)\right\| d t \\
+\\
+\textbf {Line Integral} & \int_{\mathbf{c}} \mathbf{F} d s=\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t \\
+\\
+\textbf {Surface Integral (Scalar)} & \iint_S f d S = \iint_D f(\mathbf{\Phi}(u, v)) \cdot\left\|\mathbf{T}_u \times \mathbf{T}_v\right\| d u d v \\
+\\
+\textbf {Surface Integral (Vector)} & \iint_{\mathbf{\Phi}} \mathbf{F} \cdot d \mathbf{S}=\iint_D \mathbf{F} \cdot\left(\mathbf{T}_u \times \mathbf{T}_v\right) d u d v
+\end{array}
+\]
+
+\begin{marginfigure}
+	For an interpretation of double, triple, and line integrals in terms of weighted sums, please see this \href{https://www.math.ucla.edu/~josephbreen/Line_and_Surface_Integrals.pdf}{\textbf{reference}}.
+\end{marginfigure}
+
+\subsection{Line Integrals of Vector Fields}
+Consider a parameterized curve $\mathbf{c}(t)$
+\begin{align*}
+	&\mathbf{c}(t): [a, b] \rightarrow U \subseteq \R^3 \\
+	&t \mapsto \mathbf{c}(t)
+\end{align*}
+which is assumed to be simple and oriented.
+
+\hfill
+
+\begin{defn}[Path Integral]
+	\sloppy Given a curve $\mathbf{c}: [a,b] \rightarrow \R^3$ that is of class $C^1$, the \textbf{path integral} of $f: \R^3 \rightarrow \R$ along $c$ is,
+	\[\int_{\mathbf{c}} f d s = \int_a^b f(\mathbf{c}(t))\left\|\mathbf{c}^{\prime}(t)\right\| d t\]
+\end{defn}
+
+\begin{rmk}
+	If $\mathbf{c}(t)$ is piecewise $C^1$ or $f(\mathbf{c}(t))$ is piecewise continuous, then we can break $I$ into pieces over which $f(\mathbf{c}(t)) \|\mathbf{c}^{\prime}(t)\|$ is continuous. We then sum the integrals over the pieces.
+\end{rmk}
+
+\begin{marginfigure}
+	The assumption that $\mathbf{c}(t)$ is simple tells us that it is a one-to-one on $[a,b]$.
+\end{marginfigure}
+
+\begin{ex}{Oriented Simple Curves}{label}
+	\begin{enumerate}
+		\item Let $0 \leq t \leq 1$. The following curves have the same image,
+		\begin{align*}
+			&\mathbf{c}_1(t) = (t, t, t) \\
+			&\mathbf{c}_2(t) = (1-t, 1-t, 1-t)
+		\end{align*}
+		but opposite orientations.
+		\item Let $0 \leq t \leq 1$. The following curves have the same image,
+		\begin{align*}
+			&\mathbf{c}_1(t) = (\cos t, \sin t) \\
+			&\mathbf{c}_2(t) = (\cos 2t, \sin 2t)
+		\end{align*}
+		 but $\mathbf{c}_2(t)$ is not simple.
+	\end{enumerate}
+\end{ex}
+
+\hfill
+
+\noindent We now consider the problem of integrating a vector field along a path. We can approximate the \textbf{work done} by the force field $\mathbf{F}$ on a particle moving along a path $\mathbf{c}:[a,b] \rightarrow \R^3$ as,
+\[\int_a^b \mathrm{~F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+
+\hfill
+
+\begin{defn}[Line Integral]
+	Given a curve $\mathbf{c}: [a,b] \rightarrow \R^3$ that is of class $C^1$, the \textbf{line integral} of a vector field $\mathbf{F}$ on $\R^3$ along $c$ is,
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}:=\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+\end{defn}
+
+\begin{rmk}[Notation]
+	Let $\mathbf{c}(t) = (x(t), y(t), z(t))$. Then,
+	\[\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+	is the integral,
+	\[\int_a^b (F_1 \cdot \mathbf{i} + F_2 \cdot \mathbf{j} + F_3 \cdot \mathbf{k}) \cdot (x^{\prime}(t) \cdot \mathbf{i}+y^{\prime}(t) \cdot \mathbf{j}+z^{\prime}(t) \cdot \mathbf{k}) dt\]
+	which we can re-write by an abuse of notation as,
+	\[\int_a^b F_1 \cdot x^{\prime}(t)+F_2 \cdot y^{\prime}(t) dt + F_3 \cdot z^{\prime}(t) dt\]
+\end{rmk}
+
+\begin{ex}{$\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}$}{label}
+	We will calculate the work of the force field
+	\[\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}\]
+	along the line segment given by,
+	\[\mathbf{c}(t) = (t, t) \quad 0 \leq t \leq 1\]
+	By definition, this is, 
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}=\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+	which evaluates to,
+	\[\int_0^1\left(t^2 \cdot \mathbf{i}+t \cdot \mathbf{j}\right) \cdot(\mathbf{i}+\mathbf{j}) d t = \frac{5}{6}\]
+\end{ex}
+
+\begin{ex}{$\mathbf{F} = y \cdot \mathbf{i}$}{label}
+	We will calculate the work of the force field
+	\[\mathbf{F} = y \cdot \mathbf{i}\]
+	along the unit circle oriented counter-clockwise,
+	\[\mathbf{c}(t) = (\cos t, \sin t) \quad 0 \leq t \leq 2 \pi\]
+	By definition, this is, 
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s} = \int_{0}^{2\pi} (\sin t \cdot \mathbf{i}) \cdot (-\sin t \cdot \mathbf{i} + \cos t \cdot \mathbf{j}) dt = -\pi\]
+\end{ex}
+
+\begin{ex}{$\mathbf{F} = y \cdot \mathbf{i}$}{label}
+	Consider the work of the same force field
+	\[\mathbf{F} = y \cdot \mathbf{i}\]
+	along the curve,
+	\[\mathbf{c}(t) = (\cos 2t, \sin 2t) \quad 0 \leq t \leq 2\pi\]
+	This is \textbf{not a simple curve} because the unit circle is covered twice by the image of $\mathbf{c}(t)$. Computing the line integral,
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s} = \int_0^{2\pi} \sin 2t \cdot \mathbf{i} \cdot (-2 \sin 2t \cdot \mathbf{i} + 2 \cos 2t \cdot \mathbf{j}) dt = -2\pi\]
+	as opposed to $-\pi$.
+\end{ex}
+
+\begin{rmk}
+	The line integral can be thought of as the path integral of the tangential component $\mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{T}(t)$ of $\mathbf{F}$ along $\mathbf{c}$.
+	\begin{align*}
+		\int \mathbf{F} \cdot d \mathbf{s} & =\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t \\
+		& =\int_a^b\left[\mathbf{F}(\mathbf{c}(t)) \cdot \frac{\mathbf{c}^{\prime}(t)}{\left\|\mathbf{c}^{\prime}(t)\right\|}\right]\left\|\mathbf{c}^{\prime}(t)\right\| d t \\
+		& =\int_a^b[\mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{T}(t)]\left\|\mathbf{c}^{\prime}(t)\right\| d t .
+	\end{align*}
+\end{rmk}
+
+\begin{defn}[Reparameterization]
+	Let $\mathbf{h}:[a,b]\rightarrow[a^{\prime},b^{\prime}]$ be a one-to-one $C^1$ real-valued function. If $\mathbf{c}:[a^{\prime},b^{\prime}] \rightarrow \R^3$ is piecewise $C^1$,
+	\[\mathbf{p} := (\mathbf{c} \circ h) : [a,b] \rightarrow \R^3\]
+	is a reparameterization of $\mathbf{c}$.
+\end{defn}
+
+\begin{thm}[Change of Parameterization]
+	Let $\mathbf{F}$ be a vector field continuous on the $C^1$ path $\mathbf{c}:[a^{\prime},b^{\prime}] \rightarrow \R^3$. Given a reparameterization $\mathbf{p}:[a,b] \rightarrow \R^3$ of $\mathbf{p} := (\mathbf{c} \circ h) : [a,b] \rightarrow \R^3$, we have that,
+		\[\int_{\mathbf{p}} \mathbf{F} \cdot d \mathbf{s}=\left\{\begin{array}{c}
+		+\int_{\mathbf{c}}\mathbf{F} \cdot d \mathbf{s} \quad \text { if } \mathbf{h} \text{ increases monotonically} \\
+		- \int_{\mathbf{c}}\mathbf{F} \cdot d \mathbf{s} \quad \text { if } \mathbf{h} \text{ decreases monotonically} \\
+		\end{array}\right.\]
+\end{thm}
+
+\begin{cor}
+	If $\mathbf{p}$ is orientation-preserving, then,
+	\[\int_{\mathbf{p}} \mathbf{F} \cdot d \mathbf{s}=\int_{\mathrm{c}} \mathbf{F} \cdot d \mathbf{s}\]
+	If $\mathbf{p}$ is orientation-reversing, then,
+	\[\int_{\mathbf{p}} \mathbf{F} \cdot d \mathbf{s}= - \int_{\mathrm{c}} \mathbf{F} \cdot d \mathbf{s}\]
+\end{cor}
+
+\begin{ex}{$\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}$}{label}
+	We will calculate the work of the force field
+	\[\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}\]
+	along the line segment given by,
+	\[\mathbf{c}(t) = (t^2, t^2) \quad 0 \leq t \leq 1\]
+	By definition, this is, 
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}=\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+	which evaluates to,
+	\[\int_0^1\left(t^4 \mathbf{i}+t^2 \mathbf{j}\right) \cdot(2t \mathbf{i}+ 2t\mathbf{j}) d t = \frac{5}{6}\]
+\end{ex}
+
+\begin{ex}{$\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}$}{label}
+	We will calculate the work of the force field
+	\[\mathbf{F} = x^2 \cdot \mathbf{i} + y \cdot \mathbf{j}\]
+	along the line segment given by,
+	\[\mathbf{c}(t) = (1-t, 1-t) \quad 0 \leq t \leq 1\]
+	By definition, this is, 
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}=\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+	which evaluates to,
+	\[\int_0^1\left((1-t)^2 \cdot \mathbf{i}+(1-t) \cdot \mathbf{j}\right) \cdot(-\mathbf{i}-\mathbf{j}) d t = -\frac{5}{6}\]
+\end{ex}
+
+\begin{rmk}
+	Unlike the line integral, the path integral is \textbf{not oriented}. In fact, path integrals are unchanged under re-parametrizations.
+\end{rmk}
+
+\hfill
+
+\noindent Recall that a vector field $\mathbf{F}$ is called a \textbf{gradient vector field} if $\mathbf{F} = \nabla f$ for some real-valued function $f$. In particular,
+\[\mathbf{F}=\frac{\partial f}{\partial x} \mathbf{i}+\frac{\partial f}{\partial y} \mathbf{j}+\frac{\partial f}{\partial z} \mathbf{k}\]
+
+\hfill
+
+\begin{thm}[Fundamental Theorem of Calculus]
+	Suppose that $f: \R^3 \rightarrow \R$ is of class $C^1$ and $\mathbf{c}:[a,b] \rightarrow \R^3$ is piecewise $C^1$. Then,
+	\[\int_{\mathbf{c}} \nabla f \cdot d \mathbf{s}=f(\mathbf{c}(b))-f(\mathbf{c}(a))\]
+\end{thm}
+
+\begin{proof}
+	Define a composite function $F: \R \rightarrow \R$ by $F(t) = f(\mathbf{c}(t))$. Apply the chain rule to compute $F^{\prime}$:
+	\[F^{\prime}(t) = \nabla f(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t)\]
+	By the Fundamental Theorem of Calculus,
+	\[\int_a^b F^{\prime}(t) d t=F(b)-F(a)=f(\mathbf{c}(b))-f(\mathbf{c}(a))\]
+	Hence, the result follows from the fact that,
+	\[\int_{\mathbf{c}} \nabla f \cdot d \mathbf{s}=\int_a^b \nabla f(\mathbf{c}(t)) \cdot \mathbf{c}^{\prime}(t) d t\]
+\end{proof}
+
+\hfill
+
+\noindent If we can recognize the integrand as a gradient, then the evaluation of the integral becomes much easier. This is summarized below:
+
+\hfill 
+
+\begin{rmk}
+	If $\mathbf{F}$ is conservative, then $\mathbf{F}=\mathbf{\nabla} f$ for $f: \R^3 \rightarrow \R$. Then,
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}= f(\mathbf{c}(b))-f(\mathbf{c}(a))\]
+\end{rmk}
+
+\begin{cor}
+	The value of the work of a gradient field is independent of the choice of path connecting the two endpoints. That is,
+	\[\int_{\mathbf{c}_1} \mathbf{F} d\mathbf{s} = \int_{\mathbf{c}_2} \mathbf{F} d\mathbf{s}\]
+	if $\mathbf{c}_1$ and $\mathbf{c}_2$ have the same endpoints.
+\end{cor}
+
+\begin{cor}
+	If $\mathbf{c}$ is closed, then $\int_{\mathbf{c}} \mathbf{\nabla} f \cdot d \mathbf{s}=0$.
+\end{cor}
+
+\begin{marginfigure}
+	If $\mathbf{c}$ is a closed curve, then we write,
+	\[\oint_{\mathbf{c}} \mathbf{F} d \mathbf{s}\]
+\end{marginfigure}
+
+\begin{rmk}
+	If $\mathbf{c}_1$ and $\mathbf{c}_2$ are two curves that differ only in orientation,
+	\[\int_{\mathbf{c}_1} \mathbf{F} \cdot d \mathbf{s} = -\int_{\mathbf{c}_2} \mathbf{F} \cdot d \mathbf{s}\]
+\end{rmk}
+
+\begin{marginfigure}
+	It may be easier to parameterize the components $\mathbf{c}_i$ than the whole curve $\mathbf{c}$.
+\end{marginfigure}
+
+\begin{rmk}
+	If $\mathbf{c}$ is an oriented curve that is made up of several oriented component curves $\mathbf{c}_1, \cdots, \mathbf{c}_n$, that is, $\mathbf{c} = \mathbf{c}_1 + \cdots \mathbf{c}_n$, then,
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s} = \int_{\mathbf{c}_1} \mathbf{F} \cdot d \mathbf{s} + \cdots + \int_{\mathbf{c}_n} \mathbf{F} \cdot d \mathbf{s}\]
+\end{rmk}
+
+\begin{ex}{Verification of Path Independence}{label}
+	Consider the force field,
+	\begin{align*}
+		\mathbf{F}&=x \mathbf{i}+y \mathbf{j}+z \mathbf{k} \\
+		&= \mathbf{\nabla}\left(\frac{1}{2} x^2+\frac{1}{2} y^2+\frac{1}{2} z^2\right)
+	\end{align*}
+	along the curve,
+	\[\mathbf{c}(t)=\left(t, t^2, t\right) \quad 0 \leq t \leq 1\]
+	Both from applying the definitions or our theorems,
+	\[\int_{\mathbf{c}} \mathbf{F} \cdot d \mathbf{s}=V(1,1,1)-V(0,0,0) = \frac{1}{2}\]
+\end{ex}
+
+\begin{defn}[Flux]
+	The \textbf{flux} of a vector field $\mathbf{F}$ across $\mathbf{c}$ is,
+	\[\int_a^b \mathbf{F}(\mathbf{c}(t)) \cdot \mathbf{n}(t) d t\]
+	where $\mathbf{n}(t)$ is the normal vector.
+\end{defn}
+
+\begin{marginfigure}
+	Flux and work are independent of the choice of parameterization for $\mathbf{c}$, but they are not independent of the choice of orientation.
+\end{marginfigure}

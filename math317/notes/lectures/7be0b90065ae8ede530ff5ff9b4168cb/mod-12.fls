@@ -1,0 +1,13 @@
+PWD /Users/janakurrek/Desktop/mcgill/math317/notes/lectures
+INPUT /usr/local/texlive/2022/texmf.cnf
+INPUT /usr/local/texlive/2022/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT mod-12.tex
+OUTPUT 7be0b90065ae8ede530ff5ff9b4168cb/mod-12.log
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
+OUTPUT 7be0b90065ae8ede530ff5ff9b4168cb/mod-12.pdf
+INPUT /usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map

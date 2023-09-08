@@ -1,0 +1,112 @@
+\subsection{The Implicit Function Theorem}
+\begin{ex}{Motivating Example}{label}
+	We can find neighborhoods around points of the circle 
+	\[x^2 + y^2 = 1\]
+	for which they correspond to the graph of the function
+	\[f(x) = \pm\sqrt{1-x^2}\]
+	\begin{center}
+    \includegraphics[width=0.7\linewidth]{figures/wk-6/fig-6.png}
+	\end{center}
+	This does not hold at $(1,0), (-1,0)$.
+\end{ex}
+
+\begin{marginfigure}
+	The \textbf{Implicit Function Theorem} provides conditions under which a relationship of the form $f(x, y) = 0$ can be re-written as a function $y = f(x)$ locally.
+\end{marginfigure}
+
+\begin{thm}[Implicit Function Theorem]
+	Let $f: \R^{n+1} \rightarrow \R$ be of class $C^1$. Denote points in $\R^{n+1}$ by $(x, z)$, where $x \in \R^n$ and $z \in \R$. If,
+	\[f(x_0, z_0) = 0 \quad \text{ and } \quad \frac{\partial f}{\partial z} (x_0, z_0) \neq 0\]
+	for a point $(x_0, y_0) \in \R^{n+1}$, then there exists,
+	\begin{enumerate}
+		\item A ball $U$ containing $x_0$ in $\R^n$ 
+		\item A neighborhood $V$ of $z_0$ in $\R$
+	\end{enumerate}
+	 such that there is a unique implicit function $z = g(x)$ satisfying that,
+	 \begin{enumerate}
+	 	\item $z$ is defined for $x$ in $U$ and $z$ is in $V$
+	 	\item $f(x, g(x)) = 0$ 
+	 \end{enumerate}
+	 Moreover, if $x \in U$ and $z \in Z$ satisfy $f(x, z) = 0$, then $z = g(x)$. Finally, $z = g(x)$ is continuously differentiable and,
+	\[(\mathbf{D} g) (\mathbf{x})=-\left.\frac{1}{\frac{\partial f}{\partial z}(\mathbf{x}, z)} \cdot \mathbf{D}_{\mathrm{x}} f(\mathbf{x}, z)\right|_{z=g(\mathrm{x})}\]
+	where $\mathbf{D}_x f$ is the partial derivative of $f$ with respect to $x$. That is,
+	\[\frac{\partial g}{\partial x_i}=-\frac{\partial f / \partial x_i}{\partial f / \partial z}\]
+	for all $i = 1, 2, \cdots, n$.
+\end{thm}
+
+\begin{thm}[General Implicit Function Theorem]
+	Suppose that $\mathbf{F}_i$ is $C^1$ for $1 \leq i \leq m$. Consider the determinant $\Delta$ of the matrix,
+	\[\left[\begin{array}{ccc}
+	\frac{\partial \mathbf{F}_1}{\partial z_1} & \cdots & \frac{\partial \mathbf{F}_1}{\partial z_m} \\
+	\vdots & & \vdots \\
+	\frac{\partial \mathbf{F}_m}{\partial z_1} & \cdots & \frac{\partial \mathbf{F}_m}{\partial z_m}
+	\end{array}\right]\]
+	evaluated at a point $(x_0, z_0)$. If $\Delta \neq 0$, then
+	\begin{align*}
+	&\mathbf{F}_1\left(x_1, \ldots, x_n, z_1, \ldots, z_m\right)=0\\
+	&\mathbf{F}_2\left(x_1, \ldots, x_n, z_1, \ldots, z_m\right)=0\\
+	&\mathbf{F}_m\left(x_1, \ldots, x_n, z_1, \ldots, z_m\right)=0
+	\end{align*}
+	defines a unique set of smooth functions,
+	\[z_i=z_i\left(x_1, \ldots, x_n\right) \quad(i=1, \ldots, m)\]
+	near the point $(x_0, z_0)$.
+\end{thm}
+
+\begin{marginfigure}
+	The derivatives of $z_i$ can be computed by implicit differentiation.
+\end{marginfigure}
+
+\begin{ex}{Applications of the Implicit Function Theorem}{label}
+	Consider the functions $F_1, F_2: \R^4 \rightarrow \R$ defined in the system,
+	\begin{align*}
+	&F_1(x, y, u, v)=x^2+x y-y^2-u = 0\\
+	&F_2(x, y, u, v)=2 x y+y^2-v = 0
+	\end{align*}
+	We want to show that $x$ and $y$ can be solved for as $C^1$ functions of $u$ and $v$ near the point $(x_0, y_0, u_0, v_0) = (2, -1, 1, -3)$.
+	\begin{enumerate}
+		\item $(2, -1, 1, -3)$ satisfies the constraints,
+		\begin{align*}
+		&F_1(2,-1,1,-3)=4-2-1-1=0 \\
+		&F_2(2,-1,1,-3)=-4+1+3=0
+		\end{align*}
+		\item Computing the determinant of the matrix,
+		\[\left(\begin{array}{ll}
+		\frac{\partial F_1}{\partial x} & \frac{\partial F_1}{\partial y} \\
+		\frac{\partial F_2}{\partial x} & \frac{\partial F_2}{\partial y}
+		\end{array}\right)=\left(\begin{array}{cc}
+		2 x+y & x-2 y \\
+		2 y & 2 x+2 y
+		\end{array}\right)\]
+		at our point gives $3 \cdot 2-(-2) \cdot 4=6+8 \neq 0$.
+	\end{enumerate}
+	To compute the partial derivatives via implicit differentiation,
+	\begin{align*}
+	&D_u F_1: 2 x x_u+x_u y+x y_u-2 y y_u-1=0 \\
+	&\implies x_u(2 x+y)+y_u(x-2 y)-1=0 \\ \\
+	&D_u F_2: 2 x_u y+2 x y_u+2 y y_u =0 \\
+	&\implies x_u(2 y)+y_u(2 x+2 y) =0
+	\end{align*}
+	Evaluated at $(2, -1, 1, -3)$, this is,
+	\begin{align*}
+		3x_u + 4y_u - 1 = 0 \\
+		-2x_u + 2y_u = 0
+	\end{align*}
+	which implies that $x_u = y_u = 1/7$.
+\end{ex}
+
+\begin{ex}{Applications of the Implicit Function Theorem}{label}
+	Consider the function $F: \R^3 \rightarrow \R$ defined on the level surface,
+	\[F(x, y, z)=x+y-z+\cos (x y z) = 0\]
+	We want to compute $F_x(0,0)$.
+	\begin{enumerate}
+		\item $(0, 0, 1)$ satisfies the constraints,
+		\[0+0-1+\cos (0)=0\]
+	\end{enumerate}
+	To compute the partial derivatives by implicit differentiation,
+	\begin{align*}
+	D_x F &: 1-z \cdot z_x-\left[y z+x y z_x z\right] \sin (x y z) \\
+	& \implies 1-z_x=0 \\ \\ 
+	D_y F &: 1-z \cdot z_y-\left[x z+x y z_y z\right] \sin (x y z) \\
+	& \Rightarrow 1-z_y=0
+	\end{align*}
+\end{ex}

@@ -1,0 +1,114 @@
+ \documentclass{tufte-handout}
+
+%--------Packages--------
+\usepackage{tikz}
+\usepackage{braket}
+\usepackage{booktabs,tabularx,gensymb}
+\usepackage{amsmath,amsfonts,amsthm,amssymb,mathrsfs,bbm}
+\usetikzlibrary{calc, arrows}
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning}
+
+%--------Theorem Environments--------
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{rmk}[thm]{Remark}
+
+%--------Pseudocode--------
+\usepackage{xcolor,amsmath}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\DontPrintSemicolon
+
+% Define pseudocode formatting
+\renewcommand{\KwSty}[1]{\textnormal{\textcolor{blue!90!black}{\ttfamily\bfseries #1}}\unskip}
+\renewcommand{\ArgSty}[1]{\textnormal{\ttfamily #1}\unskip}
+\SetKwComment{Comment}{\color{green!50!black}// }{}
+\renewcommand{\CommentSty}[1]{\textnormal{\ttfamily\color{green!50!black}#1}\unskip}
+\newcommand{\assign}{\leftarrow}
+\newcommand{\var}{\texttt}
+\newcommand{\FuncCall}[2]{\texttt{\bfseries #1(#2)}}
+\SetKwProg{Function}{function}{}{}
+\renewcommand{\ProgSty}[1]{\texttt{\bfseries #1}}
+
+%--------Colored Theorem-------------
+\usepackage[most]{tcolorbox}
+\definecolor{lilac}{cmyk}{0.10, 0.20, 0, 0,0}
+\tcbuselibrary{theorems}
+\newtcbtheorem
+  []%
+  {ex}
+  {\textbf{Example}}
+  {%
+  	breakable,
+    colback=lilac!5,
+    colframe=lilac!85,
+    fonttitle=\bfseries,
+  }% options
+  {def}% prefix
+
+%--------Shortcuts--------
+\usepackage{graphicx}
+\graphicspath{{./figures/}}
+
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%--------Header--------
+\title{COMP362: Honours Algorithm Design}
+\author[Winter 2022]{Winter 2022}
+\date{\today}
+
+%--------Title--------
+\makeatletter
+\renewcommand{\maketitlepage}{%
+    \cleardoublepage{%
+        \begin{fullwidth}%
+        \fontsize{12}{12}\selectfont\par\noindent{\@author \\ \noindent \small{Instructors: Vetta, Adrian Roshan}}%
+
+        \vspace{5pc}%
+
+        \fontsize{36}{40}\selectfont\par\noindent{Honours \\ \noindent Algorithm Design}%
+
+        \vspace{2pc}%
+
+        \noindent\includegraphics[width=\textwidth]{title.png}
+
+        \vspace{1pc}%
+				% \fontsize{10}{12}\selectfont\par\noindent{\textbf{Figure 1.} Example of the \texttt{Ford-Fulkerson} algorithm.}
+        \vspace{12pc}%
+        \vfill
+        % \fontsize{14}{16}\selectfont\par\noindent\thanklesspublisher%
+
+        \end{fullwidth}%
+    }%
+    \thispagestyle{empty}%
+    \clearpage
+}
+\makeatother
+
+\begin{document}
+\maketitlepage
+\tableofcontents
+\newpage
+
+\section{Network Flow}
+  \input{01-flow/flow}
+
+\section{Linear Programming}
+  \input{02-linear/linear-programming}
+
+\section{Computational Complexity}
+  \input{03-complexity/complexity}
+
+\section{Heuristic Algorithms}
+  \input{04-heuristics/heuristics}
+
+\section{Approximation Algorithms}
+ \input{05-approx/approximations}
+
+\end{document}

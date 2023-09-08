@@ -1,0 +1,266 @@
+\subsection{Numerical Integration}
+Numerical integration is called \textbf{numerical quadrature}. The first idea will be to approximate integrals using Lagrange interpolants. This approach is called \textbf{Newton-Cotes quadrature}. As usual, we will begin by defining a partition of the interval $[a,b]$ using
+\[x_k = a + kh \quad \text{where} \quad h := \frac{b-a}{n}\]
+By the Lagrange Interpolation Theorem, there is $\xi \in [a, b]$ such that,
+\[f(x)=f_n(x)+\frac{f^{(n+1)}(\xi(x))}{(n+1) !}\left(x-x_0\right) \cdots\left(x-x_n\right)\]
+Integrating both sides on $[a, b]$ gives,
+\begin{align*}
+	\mathbf{I}(f) &= \int_a^b f(x) d x \\
+	&=\underbrace{\int_a^b f_n(x) d x}_{\mathbf{I}_h(f)}+\underbrace{\int_a^b \frac{f^{(n+1)}(\xi(x))}{(n+1) !}\left(x-x_0\right) \cdots\left(x-x_n\right) d x}_{\mathbf{E}_n(f)}
+\end{align*}
+
+The \textbf{midpoint rule} is used if $n = 0$, in which case $f_0(x)$ is the constant function. We define $f_0(x)$ to be the midpoint value of $f$,
+\[f_0(x)=f\left(\frac{a+b}{2}\right)\]
+which implies that,
+\[\mathbf{I}_h(f)=\int_a^b f_0(x) d x=\int_a^b f\left(\frac{a+b}{2}\right) d x=(b-a) \cdot f\left(\frac{a+b}{2}\right)\]
+
+\begin{defn}[Midpoint Rule]
+	The \textbf{midpoint rule} is,
+	\[\mathbf{I}_h(f) = (b-a) \cdot f\left(\frac{a+b}{2}\right)\]
+\end{defn}
+
+\NewLine
+
+The \textbf{trapezoid rule} is used if $n = 1$, in which case we use Newton's Divided Difference Formula with $x_0 = a$ and $x_1 = b$,
+	\[f_1(x)=f(a)+\frac{f(b)-f(a)}{b-a} \cdot (x-a)\]
+which implies that
+	\begin{align*}
+		\mathbf{I}_h(f) &= \int_a^b f_1(x) d x=\int_a^b\left(f(a)+\frac{f(b)-f(a)}{b-a}(x-a)\right) d x \\
+		&= (b-a) \cdot f(a)+\left.\frac{f(b)-f(a)}{b-a} \frac{(x-a)^2}{2}\right|_a ^b=(b-a) \cdot \frac{f(a)+f(b)}{2}
+	\end{align*}
+
+\begin{defn}[Trapezoidal Rule]
+	The \textbf{trapezoid rule} is,
+	\[\mathbf{I}_h(f) = (b - a) \cdot \frac{f(a) + f(b)}{2}\]
+\end{defn}
+
+\NewLine
+
+\textbf{Simpson's rule} is used if $n = 2$, in which case we use Newton's Divided Difference Formula with the parameters,
+\[m = \frac{a+b}{2} \quad\quad x_0 = a \quad\quad x_1 = m \quad\quad x_2 = b\]
+to obtain the formula,
+\[f_2(x)=f(a)+f[a, m](x-a)+f[a, m, b](x-a)(x-m)\]
+where
+\[f[a, m]=\frac{2(f(m)-f(a))}{b-a} \quad \text{ and } \quad f[a, m, b]=\frac{2(f(b)-2 f(m)+f(a))}{(b-a)^2}\]
+Integrating by parts gives,
+\begin{align*}
+	\mathbf{I}_h(f) &= \int_a^b f_2(x) d x \\
+			 		&= \int_a^b(f(a)+f[a, m](x-a)+f[a, m, b](x-a)(x-m)) d x \\
+			 		&= (b-a) f(a)+f[a, m] \frac{(b-a)^2}{2}+f[a, m, b] \frac{(b-a)^3}{12}
+\end{align*}
+	
+\begin{defn}[Simpson's Rule]
+	\textbf{Simpson's rule} is,
+	\[\mathbf{I}_h(f)=(b-a) \cdot \frac{f(a)+4 f(m)+f(b)}{6}\]
+\end{defn}
+
+\NewLine
+
+As with numerical differentiation, we need to determine the degree of accuracy of Newton-Cotes quadrature. By definition, we check the largest $p$ so that $\mathbf{I}(x^i) = \mathbf{I}_h(x^i)$ for $i \in [p]$.
+
+\[\mathbf{E}_n(f) := \int_a^b \frac{f^{(n+1)}(\xi(x))}{(n+1) !}\left(x-x_0\right) \cdots\left(x-x_n\right) d x\]
+is our error, which gives $\mathbf{E}_n\left(x^i\right)=0 $ for all $i=0, \ldots, n$. It follows that $n + 1$ point Newton-Cotes quadrature has degree of accuracy $\geq n$.
+
+
+\begin{lem}[Weighted Mean Value Theorem for Integrals]
+	If $h \in C([a, b])$ and $g$ does not change sign on $[a,b]$, then for $\eta \in(a, b)$,
+	\[\int_a^b h(x) g(x) d x=h(\eta) \int_a^b g(x) d x\]
+\end{lem}
+
+\begin{prop}
+	For the Trapezoidal rule ($n = 1$),
+	\[\mathbf{E}_1(f)=\int_a^b \underbrace{\frac{f^{\prime \prime}(\xi(x))}{2}}_{h(x)} \underbrace{(x-a)(x-b)}_{g(x)} d x\]
+\end{prop}
+
+\begin{proof}
+	Define $g$ and $h$ as follows,
+	\begin{align*}
+		&h(x) = \frac{f^{\prime \prime}(\xi(x))}{2} \\
+		&g(x) = (x-a)(x-b)
+	\end{align*}
+	Since $g$ does not change sign on $[a,b]$, we have,
+	\begin{align*}
+		\mathbf{E}_1(f)&=h(\eta) \int_a^b(x-a)(x-b) d x \\
+			  &=-f^{\prime \prime}(\xi(\eta)) \frac{(b-a)^3}{12}\\
+			  &=\mathcal{O}\left((b-a)^3\right)
+	\end{align*}
+	by the Weighted Mean Value Theorem. The error term is proportional to $f^{(2)}$, so the trapezoidal rule has degree of accuracy equal to 1.
+\end{proof}
+
+\noindent Similar calculations can be done for the Midpoint and Simpson rules.
+
+\begin{prop}
+	For the Midpoint rule ($n = 0$),
+	\[\mathbf{E}_0(f)=-\frac{f^{\prime \prime}(\xi(\eta))}{24}(b-a)^3=\mathcal{O}\left((b-a)^3\right)\]
+	that is, we have a degree of accuracy of 1.
+\end{prop}
+
+\begin{prop}
+	For the Simpson rule ($n = 2$),
+	\[\mathbf{E}_2(f) = -\frac{f^{(4)}(\xi(\eta))}{90}\left(\frac{b-a}{2}\right)^5=\mathcal{O}\left((b-a)^5\right)\]
+	that is, we have a degree of accuracy of 3.
+\end{prop}
+
+\begin{marginfigure}
+	Consider an even number $n$. The $(n + 1)$ point Newton-Cotes quadrature has degree of accuracy of $n + 1$ due to cancellations in the error term.
+\end{marginfigure}
+
+
+\subsection{Gauss Quadrature}
+Newton-Cotes quadrature is a linear combination of $f(x_k)$,
+\[\mathbf{I}_h(f) = c_0 f(a) + c_1 f(a + h) + \cdots + c_n f(b) = \sum_{k=0}^n c_k \cdot f(a+kh)\]
+In this subsection, we will no longer restrict $x_k$ to be uniformly spaced. This will produce quadratures with a higher order of accuracy. For simplicity, we will look at integration over $t \in [-1,1]$.
+
+\NewLine 
+
+\begin{ex}{Two Point Gauss Quadrature}{label}
+	We want to find $w_0$, $w_1$, $t_0$, and $t_1$ so that the quadrature of the form $\mathbf{I}_h(f) = w_0 \cdot f(t_0) + w_1 \cdot f(t_1)$ has the highest degree of accuracy. With $4$ parameters, we can satisfy
+	\[
+	\begin{gathered}
+	2=\int_{-1}^1 1 d t=I(1)=I_h(1)=w_0+w_1 \\
+	0=\int_{-1}^1 t d t=I(t)=I_h(t)=w_0 t_0+w_1 t_1 \\
+	\frac{2}{3}=\int_{-1}^1 t^2 d t=I(t^2)=I_h(t^2)=w_0 t_0^2+w_1 t_1^2 \\
+	0=\int_{-1}^1 t^3 d t=I(t^3)=I_h(t^3)=w_0 t_0^3+w_1 t_1^3
+	\end{gathered}
+	\]
+	up to degree of accuracy of $3$. Solving the 4 equations gives,
+	\[w_0 = 1 = w_1 \text{ and } -t_0 = \frac{1}{\sqrt{3}} = t_1\]
+	Thus, the two point Gauss quadrature on $[-1,1]$,
+	\[\mathbf{I}_h(f) = f\left(-\frac{1}{\sqrt{3}}\right)+f\left(\frac{1}{\sqrt{3}}\right)\]
+	has degree of accuracy up to 3.
+\end{ex}
+
+\NewLine
+
+\noindent In general, the goal has been to design approximations $\mathbf{I}_h(f)$ that maximize the degree of accuracy with respect to $\mathbf{I}_f$. We can decompose $\mathbf{I}_f$ as $\mathbf{I}_f = \mathbf{I}_h(f) + \mathbf{E}_n(f)$. Letting the integral be a linear combination of $n$ function values $f(t_k)$,
+\[\mathbf{I}_h(f) = \sum_{k=0}^{n-1} w_k \cdot f\left(t_k\right)\] 
+where $t_k$ are called \textbf{Gauss points}.
+
+\begin{marginfigure}
+	Gauss quadrature has $2n$ parameters for $n$ points. This implies a degree of accuracy of $2n - 1$.
+\end{marginfigure}
+
+\begin{rmk}
+	Relative to Newton-Cotes, Gauss quadrature is more accurate for the same number of function evaluations.
+\end{rmk}
+
+\begin{ex}{Common Gauss Quadrature on $[-1,1]$}{label}
+	\[
+	\begin{array}{|c|c|c|c|}
+		\hline n & w_k & t_k & \text { Degree of Accuracy } \\
+		\hline \hline 1 & 2 & 0 & 1 \\
+		\hline 2 & 1,1 & -\frac{1}{\sqrt{3}}, \frac{1}{\sqrt{3}} & 3 \\
+		\hline 3 & \frac{5}{9}, \frac{8}{9}, \frac{5}{9} & -\sqrt{\frac{3}{5}}, 0, \sqrt{\frac{3}{5}} & 5 \\
+		\hline
+	\end{array}
+	\]
+\end{ex}
+
+\begin{defn}[Legendre Polynomials]
+	The \textbf{Legendre polynomials} $P_k(x)$ are defined recursively for $k \in \mathbb{N}$ by the base case,
+	\begin{align*}
+		&P_0(x)=1 \\
+		&P_1(x)= x
+	 \end{align*}
+	 and the recursion formula,
+	 \[P_{k+1}(x):=x \left(\frac{2 k+1}{k+1}\right) P_k(x)-\left(\frac{k}{k+1}\right) P_{k-1}(x)\]
+\end{defn}
+
+\begin{thm}
+	For an $n$-point Gauss quadrature,
+	\begin{enumerate}
+		\item The Gauss points $\left\{t_k\right\}_{k=0}^{n-1}$ are given by the zeros of $P_n(x)$ 
+		\item The weights $\left\{w_k\right\}_{k=0}^{n-1}$ are given by
+	\[w_j=\int_{-1}^1 \ell_j(x) d x\]
+	\end{enumerate}
+	where $\ell_j(x)$ is the $j$-th Lagrange function interpolating $\left\{t_k\right\}_{k=0}^{n-1}$.
+\end{thm}
+
+\begin{marginfigure}
+	To obtain the highest degree of accuracy with $n$ points, we select $t_k$ to be the zeroes of the Legendre polynomials.
+\end{marginfigure}
+
+\begin{ex}{Two Point Gauss Quadrature}{label}
+	We will recover $t_k$ and $w_k$ for a two point Gauss quadrature.
+	\[P_2(x)=\frac{3}{2} x P_1(x)-\frac{1}{2} P_0(x)=\frac{3}{2} x^2-\frac{1}{2}=\frac{3}{2}\left(x^2-\frac{1}{3}\right)\]
+	which implies that $-t_0=\frac{1}{\sqrt{3}}=t_1$, Moreover,
+	\[\ell_{0,1}(x)=\frac{1 \mp \sqrt{3} x}{2} \Rightarrow w_{0,1}=\int_{-1}^1 \frac{1 \mp \sqrt{3} x}{2} d x=1\]
+	which implies that $w_0=1=w_1$.
+\end{ex}
+
+\noindent We can generalize our analysis from $[-1, 1]$ to intervals $[a, b]$ by changing coordinates. We use the formula for $x(t)$ given by,
+\[x=\frac{b-a}{2} t+\frac{b+a}{2}\]
+We obtain the formula,
+\[\mathbf{I}(f)=\int_a^b f(x) d x=\int_{-1}^1 f\left(\frac{b-a}{2} t+\frac{b+a}{2}\right) \cdot \frac{b-a}{2} d t\]
+so the $n$ point Gauss quadrature becomes,
+\[\mathbf{I}_h(f)=\frac{b-a}{2} \cdot \sum_{k=0}^{n-1} w_k \cdot f\left(\frac{b-a}{2} t_k+\frac{b+a}{2}\right)\]
+
+\noindent We will derive an error term for the Gauss quadrature.
+\begin{thm}
+	Denote the $n$ point Gauss quadrature as,
+	\[\mathbf{I}_h(f) = \frac{b-a}{2} \cdot \sum_{k=0}^{n-1} w_k \cdot f\left(x\left(t_k\right)\right)\]
+	where $x(t)=\frac{b-a}{2} t+\frac{b+a}{2}$. Write,
+	\[\mathbf{I}(f) = \int_a^b f(x) d x\]
+	If $f \in C^{(2n)}([a, b])$, then for $\xi \in (a,b)$,
+	\[\mathbf{I}(f)=\mathbf{I}_h(f)+\frac{f^{(2 n)}(\xi)}{(2 n) !} \int_a^b\left(z-x\left(t_0\right)\right)^2 \cdots\left(z-x\left(t_{n-1}\right)\right)^2 d z\]
+\end{thm}
+
+\begin{marginfigure}
+	This is consistent with a degree of accuracy of $2n - 1$ for the $n$ point Gauss quadrature.
+\end{marginfigure}
+
+\subsection{Composite Quadrature}
+We have looked at Newton-Cotes or Gauss quadrature over a general interval $[a, b]$. We found that the error is $\mathcal{O}\left((b-a)^p\right)$ for some positive integer $p$. To reduce the quadrature error, we will subdivide $[a, b]$ into smaller intervals of uniform length. Observe,
+\begin{align*}
+	\mathbf{I}(f)&=\int_a^b f(x) d x =\sum_{k=0}^{n-1} \int_{x_k}^{x_{k+1}} f(x) d x \\
+	&=\sum_{k=0}^{n-1} \underbrace{\mathbf{I}_{h, k}(f)}_{\begin{array}{c}
+	\texttt{quadrature on} \\
+	{\left[x_k, x_{k+1}\right]}
+	\end{array}}+\underbrace{\mathbf{E}_{h, k}(f)}_{\begin{array}{c}
+	\texttt{local error on} \\
+	{\left[x_k, x_{k+1}\right]}
+	\end{array}}
+\end{align*}
+This is the main idea behind \textbf{composite quadrature},
+\begin{align*}
+	\mathbf{I}_{h, \texttt{c}}(f):=\sum_{k=0}^{n-1} \mathbf{I}_{h, k}(f) \\
+	\mathbf{E}_{h, \texttt{c}}(f):=\sum_{k=0}^{n-1} \mathbf{E}_{h, k}(f)
+\end{align*}
+
+\begin{ex}{Composite Midpoint Rule}{label}
+	For $\xi_k \in\left(x_k, x_{k+1}\right)$ on each $\left[x_k, x_{k+1}\right]$, 
+	\[\int_{x_k}^{x_{k+1}} f(x) d x=\underbrace{h f\left(x_{k+\frac{1}{2}}\right)}_{\mathbf{I}_{h, k}(f)}-\underbrace{f^{\prime \prime}\left(\xi_k\right) \frac{h^3}{24}}_{\mathbf{E}_{h, k}(f)}\]
+	where $x_{k+\frac{1}{2}}:=\frac{x_k+x_{k+1}}{2}$. Putting this together,
+	\begin{align*}
+		&\mathbf{I}(f)=h \sum_{k=0}^{n-1} f\left(x_{k+\frac{1}{2}}\right)-\frac{h^3}{24} \sum_{k=0}^{n-1} f^{\prime \prime}\left(\xi_k\right) \\
+		&=\underbrace{h \sum_{k=0}^{n-1} f\left(x_{k+\frac{1}{2}}\right)}_{\mathbf{I}_{h, \texttt{c}}}-\underbrace{\frac{(b-a)}{24} f^{\prime \prime}(\xi) h^2}_{\mathbf{E}_{h, \texttt{c}}}
+	\end{align*}
+	where the composite error is in $\mathcal{O}\left(h^2\right)$.
+\end{ex}
+
+\begin{prop}
+	Suppose $f \in C^{p}([a, b])$ and $\xi_k \in [a, b]$ for $k \in [n-1]$. Using the Intermediate Value Theorem, we can show that
+	\[\frac{1}{n} \sum_{k=0}^{n-1} f^{(p)}\left(\xi_k\right)=f^{(p)}(\xi)\]
+	for some $\xi \in (a, b)$.
+\end{prop}
+
+\begin{proof}
+	This is left as an exercise.
+\end{proof}
+
+\begin{ex}{Composite Trapezoidal and Simpson Rule}{label}
+	We can derive the \textbf{Composite Trapezoidal Rule},
+	\[\mathbf{I}(f)=\underbrace{\frac{h}{2} \sum_{k=0}^{n-1}\left(f\left(x_k\right)+f\left(x_{k+1}\right)\right)}_{\mathbf{I}_{h, \texttt{c}}}-\underbrace{\frac{(b-a)}{12} f^{\prime \prime}(\xi) h^2}_{\mathbf{E}_{h, \texttt{c}}}\]
+	as well as the \textbf{Composite Simpson's Rule},
+	\[\mathbf{I}(f)=\underbrace{\frac{h}{6} \sum_{k=0}^{n-1}\left(f\left(x_k\right)+4 f\left(x_{k+\frac{1}{2}}\right)+f\left(x_{k+1}\right)\right)}_{\mathbf{I}_{h, \texttt{c}}}-\underbrace{\frac{(b-a)}{90} f^{\prime \prime}(\xi) h^4}_{\mathbf{E}_{h, \texttt{c}}}\]
+	The error terms are in $\mathcal{O}\left(h^2\right)$ and $\mathcal{O}\left(h^4\right)$, respectively.
+\end{ex}
+
+\noindent In summary,
+\[\begin{array}{|c|c|c|}
+\hline \text {Newton-Cotes} & \text {Composite Error} & \text { Degree of Accuracy } \\
+\hline \hline \text {Midpoint} & \mathcal{O}(h^2) & 1 \\
+\hline \text {Trapezoidal} & \mathcal{O}\left(h^2\right) & 1\\
+\hline \text {Simpson} & \mathcal{O}\left(h^4\right) & 3 \\
+\hline
+\end{array}\]

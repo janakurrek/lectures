@@ -1,0 +1,64 @@
+\section{Higher-Order Derivatives}
+\subsection{Iterated Partial Derivatives}
+The \textbf{second-order iterated derivatives} for a function $f: \R^2\rightarrow \R$ are,
+\begin{align*}
+&\underbrace{\frac{\partial f}{\partial x^2}}_{f x x}=\frac{\partial}{\partial x}\left(\frac{\partial f}{\partial x}\right) \quad\quad\quad \underbrace{\frac{\partial f}{\partial x y}}_{f x y}=\frac{\partial}{\partial x}\left(\frac{\partial f}{\partial y}\right)\\
+&\underbrace{\frac{\partial f}{\partial y x}}_{f y x}=\frac{\partial}{\partial y}\left(\frac{\partial f}{\partial x}\right) \quad\quad\quad \underbrace{\frac{\partial f}{\partial y^2}}_{f y y}=\frac{\partial}{\partial y}\left(\frac{\partial f}{\partial y}\right)
+\end{align*}
+where $f$ is assumed to be of class $C^2$.
+
+\begin{marginfigure}
+    We say that $f \in C^k$ if
+    \[\frac{\partial^k f}{\partial x_{i_1} \cdots \partial x_{i_k}}\]
+    all exist and are continuous in $U$.
+\end{marginfigure}
+
+\begin{ex}{Computing Iterated Partials}{label}
+    Consider the following function,
+    \begin{align*}
+        &f: \R^2 \rightarrow \R \\
+        &f(x, y)=x^3+x^2 y+y^2
+    \end{align*}
+    We will compute the iterated partials of $f$,
+    \begin{align*}
+        &f_{xx} = 6 x+2 y \quad \text{ and } \quad f_{yy}=2 \\
+        &f_{yx}= f_{xy}=2 x
+    \end{align*}
+\end{ex}
+
+\begin{thm}
+   If $f_{xy}$ and $f_{yx}$ are continuous in $U$, then they are equal.
+\end{thm}
+
+\subsection{Taylor's Theorem}
+We can generalize \textbf{Taylor's Theorem} to functions $f: U \subset \mathbb{R}^n \rightarrow \mathbb{R}$ in $n$ variables. The first-order formula is given by,
+\[f\left(\mathbf{x}_0+\mathbf{h}\right)=f\left(\mathbf{x}_0\right)+\sum_{i=1}^n h_i \frac{\partial f}{\partial x_i}\left(\mathbf{x}_0\right)+R_1\left(\mathbf{x}_0, \mathbf{h}\right)\]
+where $R_1\left(\mathbf{x}_0, \mathrm{~h}\right) /\|\mathrm{h}\| \rightarrow 0 \text { as } \mathbf{h} \rightarrow \mathbf{0} \text { in } \mathbb{R}^n$ and $f$ is assumed to be differentiable. The second-order formula is given be,
+\[f\left(\mathbf{x}_0+\mathbf{h}\right)=f\left(\mathbf{x}_0\right)+\sum_{i=1}^n h_i \frac{\partial f}{\partial x_i}\left(\mathbf{x}_0\right)+\frac{1}{2} \sum_{i, j=1}^n h_i h_j \frac{\partial^2 f}{\partial x_i \partial x_j}\left(\mathbf{x}_0\right)+R_2\left(\mathbf{x}_0, \mathbf{h}\right)\]
+where $R_2\left(\mathbf{x}_0, \mathrm{~h}\right) /\|\mathbf{h}\|^2 \rightarrow 0 \text { as } \mathbf{h} \rightarrow \mathbf{0}$ and $f$ is assumed to have continuous partial derivatives of third order.
+
+\begin{rmk}
+    We can obtain an explicit formula for $R_k(\mathbf{x}_0, \mathbf{h})$ by repeatedly applying Integration by Parts,
+    \[R_k\left(\mathbf{x}_0, \mathbf{h}\right):=\int_{\mathbf{x}_0}^{\mathbf{x}_0+\mathbf{h}} \frac{1}{k !}\left(\mathbf{x}_0+\mathbf{h}-z\right)^k f^{(k+1)}(z) d z\]
+\end{rmk}
+
+\begin{ex}{Computing the 2nd Order Taylor Polynomial}{label}
+    We will compute the $2$nd order Taylor polynomial for,
+    \[f(x,y) = e^{x^2+y}\]
+    at the point $\mathbf{x}_0 = (1,1)$. The partial derivatives of $f$ are,
+    \begin{align*}
+    &f_x=2 x \cdot e^{x^2+y} \implies f_x\left(\mathbf{x}_0\right)=2 e^2\\
+    &f_y=e^{x^2+y} \implies f_y = \left(\mathbf{x}_0\right)=e^2
+    \end{align*}
+    The iterated partial derivatives of $f$ are,
+    \begin{align*}
+        &f_{x x}=2 e^{x^2+y}+4 x^2 \cdot e^{x^2+y} \implies f_{x x}\left(\mathbf{x}_0\right)=6 e^2\\
+        &f_{x y}=2 x \cdot e^{x^2+y} \implies f_{x y}(\mathbf{x}_0)=2 e^2\\
+        &f_{y x}=2 x \cdot e^{x^2+y}  \implies f_{y x}(\mathbf{x}_0)=2 e^2 \\
+        &f_{y y}=e^{x^2+y} \implies f_{y y}\left(\mathbf{x}_0\right)=e^2
+    \end{align*}
+    This gives the following $2$nd order approximation,
+    \[
+    \underbrace{e^2}_{f\left(\mathbf{x}_0\right)}+ \underbrace{2 e^2 \cdot h_1 + e^2 \cdot h_2}_{\sum \frac{\partial f}{\partial x_i}\left(\mathbf{x}_0\right) h_i} + \frac{1}{2} e^2(6 \cdot h_1^2+ \underbrace{2 \cdot 2 \cdot h_1 h_2}_{f_{x y} \cdot h_1 h_2+f_{y x} \cdot h_2 h_1} +\underbrace{1 \cdot h_2^2}_{f_{y y} \cdot h_2^2})
+    \]
+\end{ex}

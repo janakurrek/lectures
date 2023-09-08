@@ -1,0 +1,208 @@
+\subsection{Overdetermined Linear Systems}
+An \textbf{overdetermined} linear problem $A \mathbf{x} = \mathbf{b}$ is a problem in which the number of rows of $A$ largely exceeds the number of columns. In general, the problem has no soution unless $\mathbf{b}$ is in the column space of $A$. This makes overdetermined problems \textbf{ill-posed}.
+
+\begin{ex}{Curve Fitting and Polynomial Regression}{label}
+	Given $\{(x_i, y_i)\}_{i = 1}^m$, we want to find a polynomial $f(x, \mathbf{a})$ of degree $n$ satisfying $f(x_i, \mathbf{a}) = y_i$ for $1 \leq i \leq m$.
+	\[a_0+a_1 x_i+\cdots+a_{n-1} x_i^{n-1}+a_n x_i^n=f\left(x_i, \boldsymbol{a}\right)=y_i\]
+	We can write this as an overdetermined linear system $A \mathbf{a} = \mathbf{b}$,
+	\[\underbrace{\left(\begin{array}{ccccc}1 & x_1 & x_1^2 & \cdots & x_1^n \\ 1 & x_2 & x_2^2 & \cdots & x_2^n \\ \vdots & \vdots & \vdots & & \vdots \\ 1 & x_m & x_m^2 & \cdots & x_m^n\end{array}\right)}_{=: A} \underbrace{\left(\begin{array}{c}a_0 \\ a_1 \\ \vdots \\ a_n\end{array}\right)}_{=: \boldsymbol{a}}=\left(\begin{array}{c}f\left(x_1, \boldsymbol{a}\right) \\ f\left(x_2, \boldsymbol{a}\right) \\ \vdots \\ f\left(x_m, \boldsymbol{a}\right)\end{array}\right)=\underbrace{\left(\begin{array}{c}y_1 \\ y_2 \\ \vdots \\ y_m\end{array}\right)}_{=: \boldsymbol{b}}\]
+	\textbf{Underfitting} occurs if $n$ is too small, while \textbf{overfitting} occurs if $n$ is too large. For example, if $n = 1$, then $f(x, \mathbf{a}) = a_0 + a_1 x$ is the best fit line. Otherwise, if $n$ is large, we obtain a high degree polynomial.
+\end{ex}
+
+\noindent While we cannot solve the problem exactly, we will attempt to satisfy it "as much as possible". Rather than solving $A \mathbf{x} = \mathbf{b}$, we will look for a vector $\mathbf{x}$ which minimizes the distance $\|A \mathbf{x} - \mathbf{b}\|^2_2$.
+
+\begin{rmk}
+	Finding $\mathbf{x} \in \R^n$ so that $\|A \mathbf{x} - \mathbf{b}\|$ is minimized is equivalent to minimizing with the square of the norm $\|A \mathbf{x} - \mathbf{b}\|_2^2$. 
+\end{rmk}
+
+\begin{defn}[Column Space]
+	The \textbf{column space} of $A$ is,
+	\[\text{Ran}(A) = \{A \mathbf{x} \mid \mathbf{x} \in \R^n\}\]
+\end{defn}
+
+\begin{marginfigure}
+	The \textbf{range} of a matrix is a plane in $\R^m$.
+\end{marginfigure}
+
+\NewLine
+
+\noindent The desired condition for minimizing $\|A \mathbf{x} - \mathbf{b}\|^2_2$ is,
+\begin{align*}
+	\text{Ran}(A)  \perp (A \mathbf{x} - \mathbf{b}) \iff &A \mathbf{y} \perp (A \mathbf{x} - \mathbf{b}) \text{ for all } \mathbf{y} \in \R^n \\
+	\iff &(A \mathbf{y})^T (A \mathbf{x} - \mathbf{b}) = 0 \text{ for all } \mathbf{y} \in \R^n \\
+	\iff & \mathbf{y}^T A^T (A \mathbf{x} - \mathbf{b}) = 0 \text{ for all } \mathbf{y} \in \R^n \\
+	\iff &A^T (A \mathbf{x} - \mathbf{b}) = \mathbf{0} \\
+	\iff &A^T A \mathbf{x} = A^T \mathbf{b}
+\end{align*}
+
+\noindent These are the \textbf{normal equations} and $\mathbf{x}$ is the \textbf{least square solution}. 
+
+\begin{rmk}
+	A least square solution $\mathbf{x}$ satisfies $\text{Ran}(A) \perp (A\mathbf{x}-\mathbf{b})$.
+\end{rmk}
+
+\begin{thm}[Uniqueness of the Least Square Solution]
+	The least square solution is unique if $A$ has full column, i.e., linearly independent columns.
+\end{thm}
+
+\begin{proof}
+	Assume for a contradiction that $\mathbf{y} = \mathbf{x} + \mathbf{e}$ is another least square solution with $\mathbf{e} := \mathbf{y} - \mathbf{x}$. It follows that,
+	\[\begin{aligned}\|A \boldsymbol{y}-\boldsymbol{b}\|_2^2 &=\|(A \boldsymbol{x}-\boldsymbol{b})+A \boldsymbol{e}\|_2^2 \\ &=[(A \boldsymbol{x}-\boldsymbol{b})+A \boldsymbol{e}]^T[(A \boldsymbol{x}-\boldsymbol{b})+A \boldsymbol{e}] \\ &=\|A \boldsymbol{x}-\boldsymbol{b}\|_2^2+2 \underbrace{(A \boldsymbol{e})^T(A \boldsymbol{x}-\boldsymbol{b})}_{\begin{array}{c}=0 \text { since } \boldsymbol{x} \text { is a } \\ \text { least square solution }\end{array}}+\|A \boldsymbol{e}\|_2^2 \end{aligned}\]
+	Hence, $\mathbf{y}$ is also a minimizer if and only if $\|A \boldsymbol{e}\|_2=0 \Leftrightarrow A \boldsymbol{e}=\mathbf{0}$. But $A \mathbf{e} = \mathbf{0}$ only has the trivial solution since $A$ has full column rank. This means that $\mathbf{e} = 0 \iff \mathbf{y} = \mathbf{x}$.
+\end{proof}
+
+\NewLine
+
+\noindent Having established uniqueness, the next theorem will prove the existence of the least square solution.
+
+\NewLine
+
+\begin{thm}
+	If $A$ has full column rank, then the unique minimizer of $\|A \mathbf{x} - \mathbf{b}\|^2_2$ is the solution to the normal equations:
+	\[A^T A \mathbf{x} = A^T \mathbf{b}\]
+\end{thm}
+
+\begin{rmk}
+	If $A$ has full column rank, then $A^T A$ is invertible and symmetric positive definite. The proof is left as an exercise.
+\end{rmk}
+
+We can multiply both sides of the normal equations by $(A^T A)^{-1}$ to obtain $\mathbf{x} = (A^T A)^{-1} A^T \mathbf{b}$. The $n \times m$ matrix $A^+ := (A^T A)^{-1} A^T$ is called the \textbf{Moore-Penrose left pseudoinverse} of $A$. If $A$ has full row rank, then $A^+ := A(A A^T)^{-1}$ is called the \textbf{Moore-Penrose right pseudoinverse} of $A$. Suppose that we are given a dataset $\{(x_i, y_i)\}_{i = 1}^N$. We can apply these ideas to find the line of best fit given our data.
+
+\NewLine
+
+\begin{ex}{Finding the Best Fit Line to Data}{label}
+	Suppose that we are given the dataset,
+	\[\{(0,0), (-1,-1), (1,2)\}\]
+	We want to determine the line of best fit,
+	\[f(x, \mathbf{a}) = a_0 + a_1 x\]
+	Evaluating $f(x_i, \mathbf{a}) = y_i$ gives,
+	\[\underbrace{\left(\begin{array}{cc}1 & 0 \\ 1 & -1 \\ 1 & 1\end{array}\right)}_A \underbrace{\left(\begin{array}{l}a_0 \\ a_1\end{array}\right)}_{\boldsymbol{x}}=\underbrace{\left(\begin{array}{c}0 \\ -1 \\ 2\end{array}\right)}_{\boldsymbol{b}}\]
+	Computing $A^T A$ and $A^T \mathbf{b}$,
+	\begin{align*}
+		&A^T \boldsymbol{b}=\left(\begin{array}{ccc}1 & 1 & 1 \\ 0 & -1 & 1\end{array}\right)\left(\begin{array}{c}0 \\ -1 \\ 2\end{array}\right)=\left(\begin{array}{l}1 \\ 3\end{array}\right) \\
+		&A^T A=\left(\begin{array}{ccc}1 & 1 & 1 \\ 0 & -1 & 1\end{array}\right)\left(\begin{array}{cc}1 & 0 \\ 1 & -1 \\ 1 & 1\end{array}\right)=\left(\begin{array}{ll}3 & 0 \\ 0 & 2\end{array}\right)
+	\end{align*}
+	Solving the normal equations gives,
+	\[f(x, a)=\frac{1}{3}+\frac{3}{2} x\]
+\end{ex}
+
+\NewLine
+
+Since $A^T A$ is symmetric positive definitive, we do not require Gaussian Elimination with Partial Pivoting or PLU Decomposition to solve the normal equation. Instead, we can find the least square solution by finding the Cholesky decomposition of $A^T A$, followed by a forward and backward substitution. 
+
+\begin{algorithm}
+	  \caption{Solving the Normal Equation}
+	  \Function{NormalEquationSolve($A$, $\mathbf{b}$)}{
+	  	$L \assign \texttt{CholeskyDecomposition}(B)$\;
+	  	$\mathbf{y} \assign \texttt{forwardSubstitution}(L, \mathbf{z})$\;
+	    \Return{\texttt{backwardSubstitute}($L^T,\mathbf{x}$)}\;
+	  }
+\end{algorithm}
+
+\begin{cor}
+	The total computation cost is $\mathcal{O}(n^3)$. Since \text{$m \gg n$}, the multiplication $A^T A$ the most expensive step.
+\end{cor}
+
+\begin{marginfigure}
+	Naive matrix multiplication is in $\mathcal{O}(n^3)$. Strassen (1969) devised a divide and conquer algorithm that runs in
+	\[\mathcal{O}(n^{\log _2(7)}) \approx \mathcal{O}(n^{2.807})\]
+	This was improved in 1990 to
+	\[\mathcal{O}(n^{2.375})\]
+	The best known run-time to date is
+	\[\mathcal{O}(n^{2.372})\]
+	It has been conjectured that there is an
+	\[\mathcal{O}(n^2)\]
+	algorithm for matrix multiplication.
+\end{marginfigure}
+
+\subsection{QR Decomposition}
+
+\begin{defn}[Orthogonal]
+	An $m \times m$ matrix $Q$ is called \textbf{orthogonal} if $Q^{-1} = Q^T$. That is, the column vectors $\{\mathbf{q}_i\}_{i=1}^m$ of $A$ satisfy,
+	\[\boldsymbol{q}_i^T \boldsymbol{q}_j=0\]
+	whenever if $i \neq j$.
+\end{defn}
+
+\begin{ex}{Orthogonal Matrices}{label}
+	Rotation matrices $R_{\theta}$ are orthogonal:
+	\[R_\theta=\left(\begin{array}{cc}\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta\end{array}\right)\]
+	Similarly, permutation matrices are orthogonal.
+\end{ex}
+
+\begin{rmk}
+	Orthogonal matrices preserve $\|\cdot\|_2$. 
+\end{rmk}
+
+\begin{proof}
+	\text{$\|Q \boldsymbol{x}\|_2^2=(Q \boldsymbol{x})^T Q \boldsymbol{x}=\boldsymbol{x}^T Q^T Q \boldsymbol{x}=\boldsymbol{x}^T \boldsymbol{x}=\|\boldsymbol{x}\|_2^2$}. Hence, \text{$\|Q \boldsymbol{x}\|_2=\|\boldsymbol{x}\|_2$} so the Euclidean distance is preserved.
+\end{proof}
+
+\begin{rmk}
+	Analogously, we can show that $\left\|Q^T \boldsymbol{x}\right\|_2=\|\boldsymbol{x}\|_2$.
+\end{rmk}
+
+\begin{defn}[QR Decomposition]
+	Let $A$ be an $m \times n$ matrix with full column rank. There is an $m \times m$ orthogonal matrix $A$ and an $m \times n$ matrix,
+	\[\left(\begin{array}{c}R \\ 0\end{array}\right)\]
+	where $R$ is an $n \times n$ invertible upper triangular matrix and $0$ is an $(m-n) \times (m - n)$ zero matrix satisfying that,
+	\[A = Q \left(\begin{array}{c}R \\ 0\end{array}\right)\]
+\end{defn}
+
+\begin{rmk}
+	We can use QR Decomposition to find the least square solution. For any $\mathbf{x} \in \R^n$,
+	\[\begin{aligned}\|\boldsymbol{b}-A \boldsymbol{x}\|_2 &=\left\|\boldsymbol{b}-Q\left(\begin{array}{l}R \\ 0\end{array}\right) \boldsymbol{x}\right\|_2=\left\|Q^T\left(\boldsymbol{b}-Q\left(\begin{array}{c}R \\ 0\end{array}\right) \boldsymbol{x}\right)\right\|_2 \\ &=\left\|Q^T \boldsymbol{b}-Q^T Q\left(\begin{array}{c}R \\ 0\end{array}\right) \boldsymbol{x}\right\|_2=\left\|Q^T \boldsymbol{b}-\left(\begin{array}{c}R \\ 0\end{array}\right) \boldsymbol{x}\right\|_2 \end{aligned}\]
+	To get the minimal $\mathbf{x}$, write 
+	\[Q^T \boldsymbol{b}=\left(\begin{array}{l}\boldsymbol{c} \\ \boldsymbol{d}\end{array}\right)\]
+	with $\mathbf{c} \in \R^n$ and $\mathbf{d} \in \R^{m-n}$. It follows that,
+	\[\|\boldsymbol{b}-\boldsymbol{A} \boldsymbol{x}\|_2^2=\left\|\left(\begin{array}{c}\boldsymbol{c}-R \boldsymbol{x} \\ \boldsymbol{d}-\mathbf{0}\end{array}\right)\right\|_2^2=\|\boldsymbol{c}-R \boldsymbol{x}\|_2^2+\underbrace{\|\boldsymbol{d}\|_2^2}_{\text {fixed by } \boldsymbol{b}}\]
+	The smallest value of $\|\boldsymbol{c}-R \boldsymbol{x}\|_2^2$ occurs precisely when $R\mathbf{x} = \mathbf{c}$. Hence, the least square solution is the solution to $R \boldsymbol{x}= \mathbf{c}$, where, 
+	\[\boldsymbol{c}=\left[Q^T \boldsymbol{b}\right]_{1 \leq i \leq n} \quad \quad A=Q\left(\begin{array}{c}R \\ 0\end{array}\right)\]
+\end{rmk}
+
+\begin{rmk}
+	QR decomposition is more stable when $\kappa(A)$ is large, even though it is more expensive numerically. 
+\end{rmk}
+
+\noindent One drawback with QR decomposition is the extra resources that are required to store that result of the $m \times m$ matrix $Q$, multiplied by $m - n$ rows of zeros. Instead, we can modify the matrix to obtain a \textbf{reduced} QR Decomposition. We will express $Q$ in terms of two block matrices $Q_1$ and $Q_2$:
+\[Q=\left(\begin{array}{ll}Q_1 & Q_2\end{array}\right)=\left(\begin{array}{cccccc}q_{11} & \ldots & q_{1 n} & q_{1 n+1} & \ldots & q_{1 m} \\ \vdots & & \vdots & \vdots & & \vdots \\ q_{m 1} & \ldots & q_{m n} & q_{m n+1} & \ldots & q_{m m}\end{array}\right)\]
+where $Q_1$ is the first $n$ columns of $Q$ and $Q_2$ is the remaining columns:
+\[\Rightarrow A=Q\left(\begin{array}{c}R \\ 0\end{array}\right)=\left(\begin{array}{ll}Q_1 & Q_2\end{array}\right)\left(\begin{array}{c}R \\ 0\end{array}\right)=Q_1 R\]
+where $A = Q_1 R$ is called the \textbf{reduced QR decomposition} of $A$. Using reduced QR, we can find the least square solution as follows:
+\[\begin{aligned} A^T A \boldsymbol{x}=A^T \boldsymbol{b} & \Leftrightarrow\left(Q_1 R\right)^T Q_1 R \boldsymbol{x}=\left(Q_1 R\right)^T \boldsymbol{b} \\ & \Leftrightarrow R^T Q_1^T Q_1 R \boldsymbol{x}=R^T Q_1^T \boldsymbol{b} \\ & \Leftrightarrow R^T R \boldsymbol{x}=R^T Q_1^T \boldsymbol{b} \\ & \Leftrightarrow R \boldsymbol{x}=Q_1^T \boldsymbol{b}\end{aligned}\]
+where the last line follows by the invertibility of $R^T$.
+
+\begin{rmk}
+	The overall cost of computing the least square solution using the reduced QR decomposition is $2 m n^2+\mathcal{O}(m n)$.
+\end{rmk}
+
+\subsection{Gram-Schmidt Orthogonalization}
+Given a full column rank matrix $A$, we want to find $A = Q_1 R$ so that $Q_1^T Q_1=I$ and $R$ is an invertible upper triangular matrix. This is done using \textbf{Gram-Schmidt orthogonalization}. Suppose that $m \geq n$ and $\{\mathbf{v}_i\}_{i=1}^n \subseteq \R^m$ are linearly independent.
+
+\NewLine
+
+\begin{defn}[Orthonormal]
+	Vectors $\{\mathbf{v}_i\}_{i=1}^n$ are \textbf{orthonormal} if,
+	\begin{enumerate}
+		\item $\boldsymbol{v}_i^T \boldsymbol{v}_i=1$
+		\item $\boldsymbol{v}_i^T \boldsymbol{v}_j=0$, if $i \neq j$
+	\end{enumerate}
+\end{defn}
+
+\NewLine
+
+Gram-Schmidt orthogonalization finds an orthonormal set of vectors $\{\mathbf{w}_i\}_{i=1}^n$ so that they span the same subspace. Suppose that $\mathbf{v}_1$, $\mathbf{v}_2$, and $\mathbf{v}_3$ are linearly independent. Define the following vectors:
+\[
+\begin{aligned}
+&\boldsymbol{w}_1:=\frac{\tilde{\boldsymbol{w}}_1}{\left\|\tilde{\boldsymbol{w}}_1\right\|_2} \Rightarrow\left\|\boldsymbol{w}_1\right\|_2=1 \\
+&\boldsymbol{w}_2:=\frac{\tilde{\boldsymbol{w}}_2}{\left\|\tilde{\boldsymbol{w}}_2\right\|_2} \Rightarrow\left\|\boldsymbol{w}_2\right\|_2=1
+\end{aligned}
+\]
+where $\tilde{\boldsymbol{w}}_1$ and $\tilde{\boldsymbol{w}}_2$ are defined as follows,
+\[\begin{aligned}
+&\tilde{\boldsymbol{w}}_1:=\boldsymbol{v}_1 \\
+&\tilde{\boldsymbol{w}}_2:=\boldsymbol{v}_2-\left(\boldsymbol{v}_2^T \boldsymbol{w}_1\right) \boldsymbol{w}_1
+\end{aligned}\]
+This leads to the following expression for $\mathbf{w}_1^T \mathbf{w}_2$,
+\[\boldsymbol{w}_1^T \boldsymbol{w}_2=\frac{1}{\left\|\tilde{\boldsymbol{w}}_1\right\|_2}(\boldsymbol{w}_1^T \boldsymbol{v}_2-\left(\boldsymbol{v}_2^T \boldsymbol{w}_1\right) \underbrace{\boldsymbol{w}_1^T \boldsymbol{w}_1}_{=1})=0\] 
+Therefore, we can define $\tilde{\boldsymbol{w}}_3$ and $\mathbf{w}_3$ as:
+\[\tilde{\boldsymbol{w}}_3:=\boldsymbol{v}_3-\left(\boldsymbol{v}_3^T \boldsymbol{w}_1\right) \boldsymbol{w}_1-\left(\boldsymbol{v}_3^T \boldsymbol{w}_2\right) \boldsymbol{w}_2 \quad \boldsymbol{w}_3:=\frac{\tilde{\mathbf{w}}_3}{\left\|\tilde{\boldsymbol{w}}_3\right\|_2} \Rightarrow\left\|\boldsymbol{w}_3\right\|_2=1\]

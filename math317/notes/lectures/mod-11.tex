@@ -1,0 +1,569 @@
+\section{Topic 6. Direct Numerical Methods for Linear Systems}
+\subsection{Introductory Definitions}
+There are two general approaches for solving linear systems,
+\[A \cdot \mathbf{x} = \mathbf{b}\]
+where $A$ is an $n \times n$ matrix of real values, $\mathbf{b}$ is a vector of $n$ real values, and $\mathbf{x}$ is an unknown vector of $n$ entries of real values. The first, which we will not cover in this course, involves iterative methods. We will focus on \textbf{direct methods}. While computing $A^{-1}$ analytically is feasible for small $n$, this can become very expensive for large $n$.
+
+\begin{defn}[Cofactor Expansion]
+	Let $A$ be an $n \times n$ matrix.
+	\begin{enumerate}
+		\item The $(i, j)$ \textbf{minor} $A_{ij}$ is the \text{$(n-1) \times (n - 1)$} matrix obtained by deleting the $i$th row and the $j$th column of $A$
+		\item The $(i, j)$ \textbf{cofactor} $C_{ij}$ is defined in terms of the minor by
+		\[C_{ij} = (-1)^{i+j} \cdot \text{det}(A_{ij})\]
+	\end{enumerate}
+\end{defn}
+
+\begin{ex}{Computing $A^{-1}$ using Cramer's Rule}{label}
+	Cramer's Rule states that for any $i = 1, 2, \cdots, n$,
+	\[\operatorname{det}(A)=\sum_{j=1}^n a_{i j} C_{i j}=a_{i 1} C_{i 1}+a_{i 2} C_{i 2}+\cdots+a_{i n} C_{i n}\]
+	There is an analogous formula for the cofactor expansion of $A$ along the $j$th column. Since both formulas require $n!$ floating point operations to compute, this method is expensive.
+\end{ex}
+
+\subsection{Special Classes of Linear Systems}
+\begin{defn}[Diagonal Matrices]
+	A \textbf{diagonal matrix} has,
+	\[D=\left(\begin{array}{llll}
+	a_{11} & & & \\
+	& a_{22} & & \\
+	& & \ddots & \\
+	& & & a_{n n}
+	\end{array}\right)\]
+\end{defn}
+
+\begin{rmk}
+	Let $D$ be diagonal. The solution to $D \mathbf{x} = \mathbf{b}$ is:
+	\[x_i = \frac{b_i}{D_{ii}}\]
+\end{rmk}
+
+\begin{algorithm}
+	  \caption{Diagonal Systems}\label{solveDiagonal}
+	  \Function{solveDiagonal($D$, $\mathbf{b}$)}{
+	    \For{$i \gets 1$ to $n$}{
+	    		$x_i \assign b_i / d_{ii}$\;
+	    }
+	    \Return{$\mathbf{x}$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	Algorithm \ref{solveDiagonal} for diagonal matrices is in $\mathcal{O}(n)$.
+\end{rmk}
+
+\begin{defn}[Triangular Matrices]
+		A \textbf{lower triangular matrix} has,
+		\[L=\left(\begin{array}{cccc}
+		L_{11} & & & \\
+		L_{21} & L_{22} & & \\
+		\vdots & \vdots & \ddots & \\
+		L_{n 1} & L_{n 2} & \ldots & L_{n n}
+		\end{array}\right)\]
+		while an \textbf{upper triangular matrix} has,
+		\[U=\left(\begin{array}{cccc}
+		U_{11} & U_{12} & \ldots & U_{1 n} \\
+		& U_{22} & \ldots & U_{2 n} \\
+		& & \ddots & \vdots \\
+		& & & U_{n n}
+		\end{array}\right)\]
+\end{defn}
+
+\begin{ex}{Solving Triangular Matrices by Forward Substitution}{label}
+	\[\left(\begin{array}{ccc}
+		2 & & \\
+		-1 & 3 & \\
+		1 & 2 & 4
+		\end{array}\right)\left(\begin{array}{l}
+		x_1 \\
+		x_2 \\
+		x_3
+		\end{array}\right)=\left(\begin{array}{l}
+		1 \\
+		2 \\
+		3
+		\end{array}\right)\]
+gives the following system of equations,
+\[\begin{array}{rcr}
+2 x_1 & = & 1 \\
+-x_1+3 x_2 & = & 2 \\
+x_1+2 x_2+4 x_3 & = & 3\end{array}\]
+which has the solution set,
+\begin{align*}
+	&x_1=\frac{1}{2} \\
+	&x_2=\frac{2-\left(-x_1\right)}{3-2}=\frac{5}{6} \\
+	&x_3=\frac{3-x_1-2 x_2}{4}=\frac{5}{24}
+\end{align*}
+\end{ex}
+
+\begin{marginfigure}
+	For forward substitution, we make the assumption that $L_{ii} \neq 0$.
+\end{marginfigure}
+
+\begin{rmk}
+	Let $L$ be lower triangular. The solution to $L \mathbf{x} = \mathbf{b}$ is:
+	\[x_i=\frac{1}{L_{i i}}\left(b_i-\sum_{j=1}^{i-1} L_{i j} x_j\right)\]
+	This is called \textbf{forward substitution}.
+\end{rmk}
+
+\begin{algorithm}
+	  \caption{Lower Triangular Systems}\label{forwardSubstitution}
+	  \Function{forwardSubstitution($L$, $\mathbf{b}$)}{
+	  	$x_1 \assign b_1 / L_{11}$\;
+	    \For{$i \gets 2$ to $n$}{
+	    		$s \assign b_i$\;
+	    		\For{$j \gets 1$ to $i-1$}{
+	    			$s \assign s - L_{ij} \times x_j$
+	    		}
+	    		$x_i \assign s/L_{ij}$
+	    }
+	    \Return{$\mathbf{x}$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	Algorithm \ref{forwardSubstitution} for triangular matrices is in $\mathcal{O}(n^2)$.
+\end{rmk}
+
+\begin{marginfigure}
+	\textbf{Exercise: } Derive a backward substitution algorithm for upper triangular systems, and write pseudocode to show that it has $\mathcal{O}(n^2)$ running time.
+\end{marginfigure}
+
+\NewLine
+
+The previous example suggestions an efficient method for handling an $n \times n$ matrix $A$. The goal will be to transform $A$ to a triangular matrix and solve it using forward or backward substitution. The convention for doing this is to use Gaussian Elimination.
+
+\subsection{Naive Gaussian Elimination}
+\begin{ex}{Gaussian Elimination}{label}
+	We will apply the \textbf{Gaussian elimination} algorithm to reduce the following augmented matrix to \textbf{row echelon form}:
+	\begin{align*}
+		&\left[\begin{array}{ccc|c}
+		1 & 1 & 1 & 1 \\
+		-1 & 2 & 5 & 2 \\
+		2 & 4 & -1 & 3
+		\end{array}\right] \\
+		\rightarrow &\left[\begin{array}{ccc|c}
+		1 & 1 & 1 & 1 \\
+		0 & 3 & 6 & 3 \\
+		0 & 2 & -3 & 1
+		\end{array}\right] \\
+		\rightarrow &\left[\begin{array}{ccc|c}
+		1 & 1 & 1 & 1 \\
+		0 & 3 & 6 & 3 \\
+		0 & 0 & -7 & -1
+		\end{array}\right]=[U \mid \mathbf{y}]
+	\end{align*}
+
+
+	We can now apply backward substitution to solve $U \mathbf{x} = \mathbf{y}$.
+\end{ex}
+
+\begin{marginfigure}
+	The solution will not change if we apply elementary row operations.
+\end{marginfigure}
+
+\begin{algorithm}
+	  \caption{Improved Forward Elimination}\label{improvedForwardSubstitution}
+	  \Function{improvedForwardSubstitution($A$, $\mathbf{b}$)}{
+	    \For{$k = 1$ to $n - 1$}{
+	    		\Comment{for each $k$th row}
+	    		\For{$i = k + 1$ to $n$}{
+	    			\Comment{for rows after the $k$th row}
+	    			$r \assign A_{ik} - A_{kk}$
+	    			\For{$j = k + 1$ to $n$}{
+	    				\Comment{for columns after the $(k-1)$th colum}
+	    				$A_{ij} \assign A_{ij} - r \times A_{kj}$
+	    			}
+	    			$b_1 \assign b_i - r \times b_k$
+	    		}
+	    }
+	    \Return{$U \assign A$, $\mathbf{y} \assign \mathbf{b}$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	Algorithm \ref{improvedForwardSubstitution} implements \texttt{forwardEliminate}, which runs in $\mathcal{O}(n^3)$, followed by \texttt{backSubstitute}, which runs in $\mathcal{O}(n^2)$. Hence, Naive Gaussian Elimination runs in $\mathcal{O}(n^3)$.
+\end{rmk}
+
+\begin{marginfigure}
+	This algorithm is called \textbf{naive} because $A_{kk}$ is assumed to be non-zero at every stage of the elimination. This is not true in general. Take, for example,
+	\[A=\left(\begin{array}{ll}
+	0 & 1 \\
+	2 & 3
+	\end{array}\right)\]
+\end{marginfigure}
+
+\subsection{LU Decomposition}
+\begin{defn}[Unit Triangular Matrix]
+	\sloppy A \textbf{unit triangular matrix} is a triangular matrix with $1$s along the diagonal entries.
+\end{defn}
+
+\begin{ex}{Unit Lower Triangular Matrices}{label}
+	The matrices $M_1$ and $M_2$ are \textbf{unit lower triangular}.
+	\[
+	\begin{aligned}
+	&A^{(1)}=\left(\begin{array}{ccc}
+	1 & 1 & 1 \\
+	0 & 3 & 6 \\
+	0 & 2 & -3
+	\end{array}\right)=\underbrace{\left(\begin{array}{ccc}
+	1 & & \\
+	1 & 1 & \\
+	-2 & 0 & 1
+	\end{array}\right)}_{=M_1} A^{(0)} \\
+	&A^{(2)}=\left(\begin{array}{ccc}
+	1 & 1 & 1 \\
+	0 & 3 & 6 \\
+	0 & 0 & -7
+	\end{array}\right)=\underbrace{\left(\begin{array}{ccc}
+	1 & & \\
+	0 & 1 & \\
+	0 & -\frac{2}{3} & 1
+	\end{array}\right)}_{=M_2} A^{(1)}
+	\end{aligned}
+	\]
+	In fact, $M_1^{-1}$ and $M_2^{-1}$ exist and are unit lower triangular.
+	\[M_1^{-1}=\left(\begin{array}{ccc}
+	1 & & \\
+	-1 & 1 & \\
+	2 & 0 & 1
+	\end{array}\right), \quad M_2^{-1}=\left(\begin{array}{ccc}
+	1 & & \\
+	0 & 1 & \\
+	0 & \frac{2}{3} & 1
+	\end{array}\right)\]
+	We can verify that $M_1^{-1} M_1=I$ and $M_2^{-1} M_2=I$.
+\end{ex}
+
+\begin{defn}[LU Decomposition]
+	\sloppy The \textbf{lower-upper (LU) decomposition} of a matrix is a factorization of the matrix as the product of a lower triangular matrix and an upper triangular matrix.
+\end{defn}
+
+\begin{ex}{LU Decomposition of $A$}{label}
+	From the previous example, $LU = (M_1^{-1} M_2^{-1}) U=A$, where $U = A^{(2)}$ and $L$ is the unit lower triangular matrix,
+	\[M_1^{-1} M_2^{-1}=\left(\begin{array}{ccc}1 & & \\ -1 & 1 & \\ 2 & \frac{2}{3} & 1\end{array}\right)\]
+\end{ex}
+
+\begin{thm}[LU Decomposition Theorem]
+	Let \text{$1 \leq k \leq n - 1$}. If the diagonal entry $A_{kk}^{(k-1)}$ of the \text{$(k-1)$}th stage of Naive Gaussian Elimination is non-zero, then $A = LU$ where,
+	\begin{enumerate}
+		\item $U$ is an upper triangular matrix obtained from applying NGE
+		\item $L$ is a unit lower triangular matrix given by:
+		\[L=M_1^{-1} M_2^{-1} \cdots M_{n-2}^{-1} M_{n-1}^{-1}\]
+		which simplifies to,
+		\[\left(\begin{array}{ccccc}
+		1 & & & & \\
+		-L_{21} & 1 & & & \\
+		-L_{31} & -L_{32} & 1 & & \\
+		\vdots & \vdots & \ddots & & \\
+		-L_{n-11} & -L_{n-12} & \ldots & 1 & \\
+		-L_{n 1} & -L_{n 2} & \ldots & -L_{n-1 n} & 1
+		\end{array}\right)\]
+	\end{enumerate}
+\end{thm}
+
+\NewLine
+
+The LU decomposition of $A$ can be implemented by making minor changes to the forward elimination algorithm that we saw in the previous subsection. The main idea will be to store the entries of $L$ on the lower triangular part of $A$ during forward elimination. These lower triangular entries were previously ignored, since they were assumed to be zero from row elimination.
+
+\NewLine
+
+\begin{algorithm}
+	  \caption{LU Decomposition}\label{LUDecomposition}
+	  \Function{LUDecomposition($A$)}{
+	    \For{$k = 1$ to $n - 1$}{
+	    		\For{$i = k + 1$ to $n$}{
+	    			$A_{ik} \assign A_{ik} - A_{kk}$
+	    			\For{$j = k + 1$ to $n$}{
+	    				$A_{ij} \assign A_{ij} - A_{ik} \times A_{kj}$
+	    			}
+	    		}
+	    }
+	    \Return{$A$}\;
+	  }
+\end{algorithm}
+
+\NewLine
+
+\begin{rmk}
+	Since \text{$L_{ii} = 1$}, the diagonal entries do not need to be stored. Hence, the matrix returned by Algorithm \ref{LUDecomposition} will have,
+	\[A_{i j}=\left\{\begin{array}{ll}
+	U_{i j}, & \text { if } i \leq j \\
+	L_{i j}, & \text { if } i>j
+	\end{array}\right\}\]
+\end{rmk}
+
+\begin{rmk}
+	Algorithm \ref{LUDecomposition} is essentially \texttt{forwardEliminate}, which runs in $\mathcal{O}(n^3)$. The main advantage of LU Decomposition over Naive Gaussian Elimination is that the same linear system $A \mathbf{x} = \mathbf{b}$ can be solved with different vectors $\mathbf{b}$.
+\end{rmk}
+
+\begin{algorithm}
+	  \caption{LUSolve}\label{LUSolve}
+	  \Function{LUSolve($A$, $\mathbf{b}$)}{
+	  	$(L, U) \assign \texttt{LUDecomposition}(A)$
+
+	  	$\mathbf{y} \assign \texttt{forwardSubstitute}(L, \mathbf{b})$
+
+	  	$\mathbf{x} \assign \texttt{forwardSubstitute}(U, \mathbf{y})$
+
+	    \Return{$\mathbf{x}$}\;
+	  }
+\end{algorithm}
+
+\begin{marginfigure}
+	For applications when $\mathbf{b}$ changes but $A$ stays fixed, then it is more efficient to compute the $LU$ decomposition of $A$ only once and then solve for $\mathbf{x}$ using forward/backward substitution.
+\end{marginfigure}
+
+\begin{rmk}
+	Since $\text{det}(A) = \text{det}(L) \cdot \text{det}(U)$, we can compute the determinant of a matrix in $\mathcal{O}(n^3)$ using LU decomposition.
+\end{rmk}
+
+\subsection{Gaussian Elimination with Partial Pivoting}
+In this section, we will explore the case where either $A_{kk}^{(k-1)} = 0$ or $A_{kk}^{(k-1)} \approx 0$ at some stage $k$ of Naive Gaussian Elimination.
+\[A=\left(\begin{array}{ll}
+\epsilon & 1 \\
+1 & 1
+\end{array}\right) \quad \quad \mathbf{b}=\left(\begin{array}{l}
+1 \\
+2
+\end{array}\right)\]
+will produce an unstable solution
+\[\left(\begin{array}{cc|c}
+\epsilon & 1 & 1 \\
+1 & 1 & 2
+\end{array}\right) \rightarrow\left(\begin{array}{cc|c}
+\epsilon & 1 & 1 \\
+0 & 1-\frac{1}{\epsilon} & 2-\frac{1}{\epsilon}
+\end{array}\right) \Rightarrow\left(\begin{array}{c}
+x_1 \\
+x_2
+\end{array}\right)=\left(\begin{array}{c}
+\frac{1-x_2}{\epsilon} \\
+\frac{2-\frac{1}{\epsilon}}{1-\frac{1}{\epsilon}}
+\end{array}\right)\]
+Suppose we take the double precision floating point number,
+\[\epsilon \sim 2.2 \times 10^{-16}\]
+It then follows that,
+\begin{align*}
+	&x_2=\frac{2-\frac{1}{\epsilon}}{1-\frac{1}{\epsilon}}
+	=f l\left(\frac{-4.54 \ldots 543 \times 10^{15}}{-4.54 \ldots 544 \times 10^{15}}\right)=1 \\ \\
+	&x_1=\frac{1-x_2}{\epsilon}=f I\left(\frac{f l\left(1-x_2\right)}{2.2 \times 10^{-16}}\right)=f I\left(\frac{0}{2.2 \times 10^{-16}}\right)=0 !
+\end{align*}
+so the two choices for $A$ will produce different solutions,
+\[\left(\begin{array}{ll}
+0 & 1 \\
+1 & 1
+\end{array}\right) \quad \quad \left(\begin{array}{ll}
+\epsilon & 1 \\
+1 & 1
+\end{array}\right)\]
+To handle the case where the pivots are near zero, we can permute row $k$ with row $m$. Here, we take $m$ to be the smallest row such that,
+\[\left|A_{m k}^{(k-1)}\right|=\max _{k \leq i \leq n}\left|A_{i k}^{(k-1)}\right|\]
+This is called \textbf{Gaussian Elimination with Partial Pivoting}.
+
+
+\begin{algorithm}
+	  \caption{Gaussian Elimination with Partial Pivoting}\label{partialPivot}
+	  \Function{partialPivot($A$, $\mathbf{b}$)}{
+	  	$p \assign [1, 2, \cdots, n]$\;
+	  	\For{$k = 1$ to $n - 1$} {
+	  		$m \assign \texttt{findMax}(|A_{kk}|, \cdots, |A_{nk}|)$\;
+	  		\If{$k \neq m$} {
+	  			$\texttt{exchangeRow}(A, k, m)$\;
+	  			$\texttt{exchangeIndex}(p, k, m)$\;
+	  		}
+	  		\For{$i = k + 1$ to $n$} {
+	  		$r \assign A_{ik} - A_{kk}$\;
+	  		\For{$j = k + 1$ to $n$} {
+	  			$A_{ji} \assign A_{ij} - r \times A_{kj}$\;
+	  			\Comment{row operations on permuted entries of $\mathbf{b}$}
+	  			$b_{p[i]} \assign b_{p[i]} - r \times b_{p[k]}$\;
+	  		}
+	  		}
+	  	}
+	    \Return{$\mathbf{x} \assign \texttt{backwardSubstitute}(A, \mathbf{b}[p])$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	Algorithm \ref{partialPivot} runs in $\mathcal{O}(n^3)$.
+\end{rmk}
+
+\subsection{PLU Decomposition}
+The natural question to ask is whether LU decomposition is possible with partial pivoting. To answer this question, we will express the row permutations as \textbf{permutation matrices}.
+
+\NewLine
+
+\begin{ex}{Permutation Matrices}{label}
+	Left multiplying by the elementary matrix,
+	\[\left(\begin{array}{lll}
+	0 & 0 & 1 \\
+	0 & 1 & 0 \\
+	1 & 0 & 0
+	\end{array}\right)\]
+will permutate Row 1 and Row 3. Similarly,
+	\[\left(\begin{array}{lll}
+	1 & 0 & 0 \\
+	0 & 0 & 1 \\
+	0 & 1 & 0
+	\end{array}\right)\]
+will permute Row 2 and Row 3.
+\end{ex}
+
+\begin{defn}[Permutation]
+	Let $\sigma:\{1, \ldots, n\} \rightarrow\{1, \ldots, n\}$ be a permutation. $P$ is the \textbf{permutation matrix} associated with $\sigma$,
+	\[P_{i j}= \begin{cases}1, & \text { if } \sigma(i)=j \\ 0, & \text { if } \sigma(i) \neq j\end{cases}\]
+\end{defn}
+
+\begin{lem}[Properties of Permutation Matrices]
+	\hfill
+	\begin{enumerate}
+		\item If $P_1$ and $P_2$ are permutation matrices, then so is $P_1 \cdot P_2$
+		\item The inverse of any permutation matrix $P$ is $P^{-1} = P^T$
+	\end{enumerate}
+\end{lem}
+
+\begin{defn}[PLU Decomposition Theorem]
+	\sloppy If $A$ is a square matrix with real or complex entries, then there exist
+	\begin{enumerate}
+		\item A permutation matrix $P$
+		\item A unit lower triangular matrix $L$
+		\item An upper triangular matrix $U$ obtained from GEPP
+	\end{enumerate} 
+	satisfying that $PA = LU$.
+\end{defn}
+
+\begin{algorithm}
+	  \caption{PLU Decomposition with Partial Pivoting}\label{PLUDecomposition}
+	  \Function{PLUDecomposition($A$)}{
+	  	$p \assign [1, 2, \cdots, n]$\;
+	  	\For{$k = 1$ to $n - 1$} {
+	  		$m \assign \texttt{findMax}(|A_{kk}|, \cdots, |A_{nk}|)$\;
+	  		\If{$k \neq m$} {
+	  			$\texttt{exchangeRow}(A, k, m)$\;
+	  			$\texttt{exchangeIndex}(p, k, m)$\;
+	  		}
+	  		\For{$i = k + 1$ to $n$} {
+	  		$A_{ik} \assign A_{ik} - A_{kk}$\;
+	  		\For{$j = k + 1$ to $n$} {
+	  			$A_{ij} \assign A_{ij} - A_{ik}\times A_{kk}$\;
+	  		}
+	  		}
+	  	}
+	  	\Comment{$p$ is the permutation for a permutation matrix $P$}
+	    \Return{$(A, p)$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	The additional work of partial pivoting is $\mathcal{O}(n^3)$, so the overall computational cost of PLU decomposition is $\mathcal{O}(n^3)$.
+\end{rmk}
+
+\NewLine 
+
+\noindent Similarly to LU decomposition, we can use this method to efficiently solve the same linear system $A \mathbf{x}=\mathbf{b}$ with different $\mathbf{b}$ :
+$$
+P A \mathbf{x}=P \mathbf{b} \Leftrightarrow L U \mathbf{x}=P \mathbf{b} \Leftrightarrow \begin{cases}L \mathbf{y} & =P \mathbf{b} \\ U \mathbf{x} & =\mathbf{y} .\end{cases}
+$$
+
+\begin{algorithm}
+	  \caption{PLUSolve}\label{PLUSolve}
+	  \Function{PLUSolve($A$, $\mathbf{b}$)}{
+	  	$(L, U, p) \assign \texttt{PLUDecomposition}(A)$\;
+	  	$\mathbf{y} \assign \texttt{forwardSubstitute}(L, \mathbf{b}[p])$\;
+	  	$\mathbf{x} \assign \texttt{forwardSubstitute}(U, \mathbf{y})$\;
+	    \Return{$\mathbf{x}$}\;
+	  }
+\end{algorithm}
+
+\begin{marginfigure}
+	If the rows of $A$ have large or small entries, then partial pivoting may not be stable due to round-off errors.
+\end{marginfigure}
+
+\begin{rmk}[Final Remarks on Pivoting]
+	\hfill
+	\begin{enumerate}
+		\item \textbf{Scaled partial pivoting} can be used to find the smallest $m$,
+		\[\frac{1}{s_m} \cdot |A_{m k}^{(k-1)}| = \frac{1}{s_i} \max _{k \leq i \leq n} |A_{i k}^{(k-1)}| \]
+		where $s_i=\max _{i \leq j \leq n}|A_{i j}^{(k-1)}|$.
+		\item \textbf{Complete partial pivoting} can be used to find the smallest $m$,
+		\[\left|A_{m \mid}^{(k-1)}\right|=\max _{k \leq i, j \leq n}\left|A_{i j}^{(k-1)}\right|\]
+		but due to increased cost, this method is rarely used.
+	\end{enumerate}
+\end{rmk}
+
+\subsection{Cholesky Decomposition}
+We will now see a special class of matrices which do not require pivoting. These matrices are \textbf{diagonally dominant}:
+
+\begin{defn}[Diagonally-Dominant]
+	\sloppy Let $A$ be a real $n \times n$ matrix. $A$ is called \textbf{strictly diagonally-dominant} if,
+	\[\left|A_{j j}\right|>\sum_{0=i \neq j}^n\left|A_{i j}\right|\]
+	holds for all columns $j$.
+\end{defn}
+
+\NewLine
+
+\noindent and \textbf{symmetric positive definite} matrices:
+
+\NewLine
+
+\begin{defn}[Symmetric Positive Definite]
+	Let $A$ be a real $n \times n$ matrix. $A$ is called \textbf{symmetric positive definite} if $A = A^T$ and,
+	\[x^T A x>0\]
+	for all $\mathbf{x} \neq \mathbf{0}$.
+\end{defn}
+
+\begin{marginfigure}
+	If $A$ is symmetric, then $A$ being positive definite is equivalent to all the eigenvalues of $A$ being positive. This occurs when $A$ is invertible.
+\end{marginfigure}
+
+\begin{thm}
+	If $A$ is symmetric positive definite, then there exists a lower triangular matrix $L$ such that $A = L L^T$.
+\end{thm}
+
+\begin{proof}
+	See class notes.
+\end{proof}
+
+\begin{algorithm}
+	  \caption{Cholesky Decomposition}\label{cholesky}
+	  \Function{choleskyDecomposition($A$)}{
+	  	\For{$k = 1$ to $n - 1$} {
+	  		$A_{kk} \assign \sqrt{A_{kk}}$\;
+	  		\Comment{Scaling the $(n-1) \times 1$ block}
+	  		\For{$i = k + 1$ to $n$} {
+	  			$A_{ik} \assign A_{ik} / A_{kk}$\;
+	  		}
+	  		\Comment{Substracting the $(n-k) \times (n-k)$ block}
+	  		\For{$j = k + 1$ to $n$} {
+	  			\For{$i = j$ to $n$} {
+	  				$A_{ij} \assign A_{ij} - A_{ik} \times A_{jk}$\;
+	  			}
+	  		}
+	  	}
+	  	$A_{nn} \assign \sqrt{A_{nn}}$\;
+	    \Return{$A$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	$L$ is stored in the lower triangular component of $A$, and the strictly upper triangular component of $A$ is ignored.
+\end{rmk}
+
+\NewLine
+
+\noindent Once $L$ is found using Cholesky Decomposition, we can solve $A \mathbf{x} = \mathbf{b}$ efficiently, as with LU. Since $A = L L^T$, $A \mathbf{x} = \mathbf{b} \iff L L^T \mathbf{x} = \mathbf{b}$.
+
+\begin{algorithm}
+	  \caption{Solving with Cholesky Decomposition}\label{CholeskySolve}
+	  \Function{CholeskySolve($A$, $\mathbf{b}$)}{
+	  	$L \assign \texttt{CholeskyDecomposition}(A)$
+
+	  	$\mathbf{y} \assign \texttt{forwardSubstitute}(L, \mathbf{b})$
+
+	  	$\mathbf{x} \assign \texttt{forwardSubstitute}(L^T, \mathbf{y})$
+
+	    \Return{$\mathbf{x}$}\;
+	  }
+\end{algorithm}
+
+\begin{rmk}
+	Cholesky Decomposition runs in $\mathcal{O}(n^3)$, but it is half the cost of LU Decomposition since there is no pivoting.
+\end{rmk}
